@@ -3,11 +3,12 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { Search } from "lucide-react";
-import { Container, Monogram } from "./ui";
+import { Container, IntegrationLogo } from "./ui";
 import { FilterSidebar } from "./FilterSidebar";
-import { integrationCategories, integrations, planNames } from "@/lib/content";
+import type { Integration } from "@/lib/yourlio";
 
-export function IntegrationsBrowser() {
+export function IntegrationsBrowser({ items }: { items: Integration[] }) {
+  const categories = useMemo(() => [...new Set(items.map((i) => i.category))].sort(), [items]);
   const [q, setQ] = useState("");
   const [selected, setSelected] = useState<Set<string>>(new Set());
 
@@ -19,30 +20,21 @@ export function IntegrationsBrowser() {
       return n;
     });
 
-  const list = useMemo(() => {
-    const cats = [...selected].filter((s) => (integrationCategories as readonly string[]).includes(s));
-    const plans = [...selected].filter((s) => (planNames as readonly string[]).includes(s));
-    return integrations.filter(
-      (i) =>
-        i.name.toLowerCase().includes(q.trim().toLowerCase()) &&
-        (cats.length === 0 || i.categories.some((c) => cats.includes(c))) &&
-        (plans.length === 0 || i.plans.some((p) => plans.includes(p))),
-    );
-  }, [q, selected]);
+  const list = useMemo(
+    () =>
+      items.filter(
+        (i) =>
+          (i.name + " " + i.description).toLowerCase().includes(q.trim().toLowerCase()) &&
+          (selected.size === 0 || selected.has(i.category)),
+      ),
+    [q, selected, items],
+  );
 
   return (
     <section className="bg-surface py-12 sm:py-16">
       <Container>
         <div className="grid gap-8 lg:grid-cols-[220px_1fr]">
-          <FilterSidebar
-            groups={[
-              { title: "Category", options: [...integrationCategories] },
-              { title: "Plan", options: [...planNames] },
-            ]}
-            selected={selected}
-            onToggle={toggle}
-            onClear={() => setSelected(new Set())}
-          />
+          <FilterSidebar groups={[{ title: "Category", options: categories }]} selected={selected} onToggle={toggle} onClear={() => setSelected(new Set())} />
           <div>
             <label className="relative mb-6 block">
               <span className="sr-only">Search integrations</span>
@@ -60,21 +52,13 @@ export function IntegrationsBrowser() {
             </p>
             <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
               {list.map((i) => (
-                <Link
-                  key={i.slug}
-                  href={`/integrations/${i.slug}`}
-                  className="group flex flex-col rounded-2xl bg-white p-5 ring-1 ring-line transition-shadow hover:shadow-lg"
-                >
-                  <Monogram name={i.name} />
+                <Link key={i.slug} href={`/integrations/${i.slug}`} className="group flex flex-col rounded-2xl bg-white p-5 ring-1 ring-line transition-shadow hover:shadow-lg">
+                  <IntegrationLogo name={i.name} logo={i.logo} />
                   <h2 className="mt-4 font-semibold group-hover:text-brand-600">{i.name}</h2>
-                  <p className="mt-1 text-sm text-text-2">Placeholder one-line description of this integration.</p>
-                  <div className="mt-auto flex flex-wrap gap-1.5 pt-4">
-                    {i.categories.map((c) => (
-                      <span key={c} className="rounded-full bg-muted px-2 py-0.5 text-xs text-text-2">
-                        {c}
-                      </span>
-                    ))}
-                  </div>
+                  <p className="mt-1 text-sm text-text-2">{i.description}</p>
+                  <span className="mt-auto pt-4">
+                    <span className="rounded-full bg-muted px-2 py-0.5 text-xs text-text-2">{i.category}</span>
+                  </span>
                 </Link>
               ))}
             </div>

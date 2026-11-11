@@ -1,8 +1,19 @@
 import { CtaBand, FaqSection, Section, SectionHeading, SimpleHero } from "@/components/ui";
-import { ph } from "@/lib/content";
 
-/** Shared layout for the free tool pages: hero, the tool itself, how-to, FAQ, CTA. */
-export function ToolShell({ title, sub, children }: { title: string; sub: string; children: React.ReactNode }) {
+/** Shared layout for the free tool pages: hero, the tool, how to use it, FAQ, CTA. */
+export function ToolShell({
+  title,
+  sub,
+  steps,
+  faqs,
+  children,
+}: {
+  title: string;
+  sub: string;
+  steps: { title: string; body: string }[];
+  faqs: { q: string; a: string }[];
+  children: React.ReactNode;
+}) {
   return (
     <>
       <SimpleHero title={title} sub={sub} />
@@ -12,17 +23,17 @@ export function ToolShell({ title, sub, children }: { title: string; sub: string
       <Section>
         <SectionHeading title={`How to use the ${title}`} />
         <ol className="grid gap-5 md:grid-cols-3">
-          {[1, 2, 3].map((n) => (
-            <li key={n} className="rounded-2xl p-6 ring-1 ring-line">
-              <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-brand-500 text-sm font-semibold text-white">{n}</span>
-              <h3 className="mt-4 font-semibold">Placeholder step {n}</h3>
-              <p className="mt-2 text-sm text-text-2">{ph.short}</p>
+          {steps.map((s, i) => (
+            <li key={s.title} className="rounded-2xl p-6 ring-1 ring-line">
+              <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-brand-500 text-sm font-semibold text-white">{i + 1}</span>
+              <h3 className="mt-4 font-semibold">{s.title}</h3>
+              <p className="mt-2 text-sm text-text-2">{s.body}</p>
             </li>
           ))}
         </ol>
       </Section>
-      <FaqSection count={5} />
-      <CtaBand />
+      <FaqSection title={`${title} questions`} items={faqs} />
+      <CtaBand title="Let the agent answer the chats your link brings in" />
     </>
   );
 }

@@ -1,228 +1,92 @@
-import Link from "next/link";
-import { Check, Minus } from "lucide-react";
 import {
+  Breadcrumbs,
   CtaBand,
   FaqSection,
   FeatureGrid,
   LogoStrip,
   PageHero,
+  ProductShot,
+  ProofStats,
   Section,
   SectionHeading,
   SplitFeature,
-  StatRow,
   StoryCarousel,
   Container,
-  ImagePlaceholder,
-  TextLink,
+  type ShotKey,
 } from "@/components/ui";
-import { customers, ph, type FeaturePage } from "@/lib/content";
-import { BRAND } from "@/lib/site";
+import { featuredForBusiness, pillars } from "@/lib/yourlio";
+import { JsonLd, breadcrumbSchema } from "@/lib/seo";
+import type { FeatureCopy } from "@/lib/content";
 
-const icons = ["Zap", "Users", "Route", "Bot", "BarChart3", "ShieldCheck", "Workflow", "Smartphone", "Clock"];
-const grid = (n: number, prefix: string) =>
-  Array.from({ length: n }, (_, i) => ({ title: `${prefix} ${i + 1}`, icon: icons[i % icons.length] }));
+const STEP_SHOTS: ShotKey[] = ["agent", "inbox", "profiles", "channels", "helpdesk", "journeys", "comment-to-dm"];
 
-/**
- * One template drives every product, solution, WhatsApp and platform page.
- * The `variant` picks which optional sections appear, matching the section
- * order of each page type.
- */
-export function FeatureTemplate({ slug, page }: { slug: string; page: FeaturePage }) {
-  const stories = customers.slice((slug.length * 3) % 30, ((slug.length * 3) % 30) + 6);
-  const v = page.variant;
-
-  if (v === "partner-story") return <PartnerStory page={page} />;
+/** One template drives every product, solution and WhatsApp page; the copy comes from lib/copy/features.ts. */
+export function FeatureTemplate({ slug, page }: { slug: string; page: FeatureCopy }) {
+  const crumbs = [
+    { name: "Home", path: "/" },
+    { name: page.title, path: `/${slug}` },
+  ];
+  const otherShots = STEP_SHOTS.filter((s) => s !== page.image);
 
   return (
     <>
-      <PageHero eyebrow={page.eyebrow} icon={page.icon} title={`${page.title}: placeholder headline`} />
+      <JsonLd data={breadcrumbSchema(crumbs)} />
+      <PageHero eyebrow={page.eyebrow} icon={page.icon} title={page.h1} sub={page.sub} art="shot" shot={page.image as ShotKey}>
+        <p className="mt-6 text-xs text-white/50 lg:text-left">Included in: {page.plan}</p>
+      </PageHero>
 
-      <section className="bg-surface py-12">
-        <Container>
-          <LogoStrip label="Placeholder line about companies using this feature" />
+      <section className="border-b border-line bg-surface">
+        <Container className="py-3">
+          <div className="[&_a]:text-text-2 [&_a:hover]:text-text [&_nav]:text-text-3 [&_span.text-white\/85]:text-text">
+            <Breadcrumbs items={crumbs} />
+          </div>
         </Container>
       </section>
 
-      {/* Intro */}
-      <Section>
-        <SectionHeading eyebrow={page.title} title={`Placeholder heading: what ${page.title} does`} sub={ph.heroSub} />
-        <ImagePlaceholder label="Overview image" ratio="aspect-[16/8]" />
-      </Section>
+      <section className="bg-surface py-12">
+        <Container>
+          <LogoStrip label="Brands that run their conversations on YourLio" />
+        </Container>
+      </section>
 
-      {/* Main capabilities */}
+      {/* Capabilities */}
       <Section tone="muted">
-        <SectionHeading title="Placeholder heading for key capabilities" sub={ph.short} />
-        <FeatureGrid items={grid(v === "security" ? 6 : 8, "Capability").slice(0, v === "security" ? 6 : 6)} />
+        <SectionHeading eyebrow={page.title} title={`What ${page.title} does`} sub={page.sub} />
+        <FeatureGrid items={page.capabilities.map((c) => ({ title: c.title, body: c.body, icon: c.icon }))} />
       </Section>
 
-      {/* Alternating deep dives */}
+      {/* How it works */}
       <Section>
+        <SectionHeading title="How it works" />
         <div className="space-y-20">
-          {[0, 1, 2].map((i) => (
+          {page.steps.map((s, i) => (
             <SplitFeature
-              key={i}
+              key={s.title}
               reverse={i % 2 === 1}
               eyebrow={`Step ${i + 1}`}
-              title={`Placeholder deep-dive heading ${i + 1}`}
-              bullets={["Placeholder detail one", "Placeholder detail two", "Placeholder detail three"]}
+              title={s.title}
+              body={s.body}
+              bullets={s.bullets}
+              visual={<ProductShot shot={i === 0 ? (page.image as ShotKey) : otherShots[(i - 1) % otherShots.length]} />}
             />
           ))}
         </div>
       </Section>
 
-      {(v === "feature" || v === "platform") && <ChatbotVsAgentTable />}
-      {v === "pricing-table" && <RateTable />}
-      {v === "security" && <Certifications />}
-
-      {/* Benefits */}
+      {/* Proof */}
       <Section tone="dark">
-        <SectionHeading dark title={`Placeholder heading: benefits of ${page.title}`} sub={ph.short} />
-        <StatRow
-          dark
-          stats={[
-            { value: "00%", label: "Placeholder metric one" },
-            { value: "0x", label: "Placeholder metric two" },
-            { value: "00k", label: "Placeholder metric three" },
-            { value: "0 min", label: "Placeholder metric four" },
-          ]}
-        />
+        <SectionHeading dark title="Results from published YourLio case studies" sub="Each figure comes from a case study with its own reporting period." />
+        <ProofStats dark />
       </Section>
 
-      {/* Differentiators */}
+      {/* Principles */}
       <Section>
-        <SectionHeading title={`Placeholder heading: what makes ${BRAND} different`} />
-        <FeatureGrid items={grid(6, "Differentiator")} />
+        <SectionHeading title="Built the way your team works" />
+        <FeatureGrid cols={4} items={pillars.map((p) => ({ title: p.title, body: p.text, icon: p.icon }))} />
       </Section>
 
-      {v !== "why" && (
-        <Section tone="muted">
-          <div className="grid items-center gap-10 lg:grid-cols-2">
-            <div>
-              <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">Placeholder heading: secure and reliable</h2>
-              <p className="mt-4 text-text-2">{ph.long}</p>
-              <div className="mt-6">
-                <TextLink href="/security">Learn about security</TextLink>
-              </div>
-            </div>
-            <FeatureGrid cols={2} items={grid(4, "Trust point").map((g, i) => ({ ...g, icon: ["Target", "SlidersHorizontal", "Lock", "ShieldCheck"][i] }))} />
-          </div>
-        </Section>
-      )}
-
-      <StoryCarousel title="Placeholder heading for customer stories" stories={stories} />
-      <FaqSection count={8} />
-      <CtaBand />
-    </>
-  );
-}
-
-function ChatbotVsAgentTable() {
-  const rows = ["Row label one", "Row label two", "Row label three", "Row label four", "Row label five"];
-  return (
-    <Section tone="muted">
-      <SectionHeading title="Placeholder heading for a comparison table" sub={ph.short} />
-      <div className="overflow-x-auto rounded-2xl bg-white ring-1 ring-line">
-        <table className="w-full min-w-[560px] text-left text-sm">
-          <thead className="bg-muted">
-            <tr>
-              <th scope="col" className="p-4 font-semibold">Criteria</th>
-              <th scope="col" className="p-4 font-semibold">Option A</th>
-              <th scope="col" className="p-4 font-semibold text-brand-600">Option B</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-line">
-            {rows.map((r) => (
-              <tr key={r}>
-                <th scope="row" className="p-4 font-medium">{r}</th>
-                <td className="p-4 text-text-2">Placeholder cell</td>
-                <td className="p-4 text-text-2">Placeholder cell</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </Section>
-  );
-}
-
-function RateTable() {
-  const countries = ["Country A", "Country B", "Country C", "Country D", "Country E", "Country F"];
-  return (
-    <Section tone="muted">
-      <SectionHeading title="Placeholder rate table" sub="All rates below are placeholders. Replace them with current rates." />
-      <div className="overflow-x-auto rounded-2xl bg-white ring-1 ring-line">
-        <table className="w-full min-w-[560px] text-left text-sm">
-          <thead className="bg-muted">
-            <tr>
-              <th scope="col" className="p-4 font-semibold">Market</th>
-              <th scope="col" className="p-4 font-semibold">Inbound / min</th>
-              <th scope="col" className="p-4 font-semibold">Outbound / min</th>
-              <th scope="col" className="p-4 font-semibold">Free tier</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-line">
-            {countries.map((c, i) => (
-              <tr key={c}>
-                <th scope="row" className="p-4 font-medium">{c}</th>
-                <td className="p-4 text-text-2">$0.00{i}</td>
-                <td className="p-4 text-text-2">$0.0{i + 1}0</td>
-                <td className="p-4">{i % 2 ? <Check className="h-4 w-4 text-accent-500" aria-label="Yes" /> : <Minus className="h-4 w-4 text-text-3" aria-label="No" />}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      <p className="mt-4 text-center text-sm text-text-2">
-        Want an estimate? Try the <Link href="/whatsapp-pricing-calculator" className="font-medium text-brand-600 underline">pricing calculator</Link>.
-      </p>
-    </Section>
-  );
-}
-
-function Certifications() {
-  return (
-    <Section>
-      <SectionHeading title="Placeholder heading for certifications and compliance" />
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-        {["Certification 1", "Certification 2", "Regulation 1", "Regulation 2"].map((c) => (
-          <div key={c} className="flex flex-col items-center rounded-2xl bg-muted p-6 text-center ring-1 ring-line">
-            <span className="flex h-16 w-16 items-center justify-center rounded-full bg-white ring-1 ring-line text-xs font-semibold text-text-2">Badge</span>
-            <p className="mt-3 text-sm font-medium">{c}</p>
-          </div>
-        ))}
-      </div>
-    </Section>
-  );
-}
-
-function PartnerStory({ page }: { page: FeaturePage }) {
-  return (
-    <>
-      <PageHero eyebrow={page.eyebrow} icon={page.icon} title={`${page.title}: placeholder headline`} art="image" ctas={<></>} />
-      <Section>
-        <div className="grid gap-12 lg:grid-cols-[2fr_1fr]">
-          <article className="space-y-10">
-            {["About the partner", "The challenge", "The solution", "The results"].map((h) => (
-              <div key={h}>
-                <h2 className="text-2xl font-semibold tracking-tight">{h}</h2>
-                <p className="mt-3 text-text-2">{ph.long}</p>
-                <p className="mt-3 text-text-2">{ph.medium}</p>
-              </div>
-            ))}
-          </article>
-          <aside className="h-fit space-y-4 rounded-2xl bg-muted p-6 ring-1 ring-line lg:sticky lg:top-24">
-            {[["Partner", "Partner name"], ["Region", "Placeholder"], ["Partner since", "0000"], ["Clients onboarded", "00"]].map(([k, val]) => (
-              <div key={k}>
-                <p className="text-xs uppercase tracking-wider text-text-3">{k}</p>
-                <p className="font-medium">{val}</p>
-              </div>
-            ))}
-            <Link href="/reseller" className="mt-2 inline-flex h-10 w-full items-center justify-center rounded-lg bg-brand-500 text-sm font-medium text-white hover:bg-brand-600">
-              Become a partner
-            </Link>
-          </aside>
-        </div>
-      </Section>
+      <StoryCarousel stories={featuredForBusiness} />
+      <FaqSection title={`${page.title}: frequently asked questions`} items={page.faqs} />
       <CtaBand />
     </>
   );

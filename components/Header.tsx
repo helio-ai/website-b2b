@@ -3,18 +3,11 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { ChevronDown, Globe, Menu, X, ArrowRight } from "lucide-react";
+import { ChevronDown, Menu, X, ArrowRight } from "lucide-react";
 import { Icon } from "./Icon";
 import { Logo } from "./Logo";
-import {
-  APP_LOGIN_URL,
-  APP_SIGNUP_URL,
-  industryMenu,
-  languages,
-  productMenu,
-  resourcesMenu,
-  topLinks,
-} from "@/lib/site";
+import { APP_LOGIN_URL, industryMenu, productMenu, resourcesMenu, topLinks } from "@/lib/site";
+import { getCaseStudy } from "@/lib/yourlio";
 
 type MenuKey = "product" | "industries" | "resources" | null;
 
@@ -23,7 +16,6 @@ export function Header() {
   const [open, setOpen] = useState<MenuKey>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [langOpen, setLangOpen] = useState(false);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const headerRef = useRef<HTMLElement>(null);
 
@@ -33,7 +25,6 @@ export function Header() {
     setLastPath(pathname);
     setOpen(null);
     setMobileOpen(false);
-    setLangOpen(false);
   }
 
   useEffect(() => {
@@ -48,13 +39,11 @@ export function Header() {
       if (e.key === "Escape") {
         setOpen(null);
         setMobileOpen(false);
-        setLangOpen(false);
       }
     };
     const onClick = (e: MouseEvent) => {
       if (headerRef.current && !headerRef.current.contains(e.target as Node)) {
         setOpen(null);
-        setLangOpen(false);
       }
     };
     document.addEventListener("keydown", onKey);
@@ -139,33 +128,6 @@ export function Header() {
           </nav>
 
           <div className="ms-auto flex items-center gap-1 sm:gap-2">
-            {/* Language selector */}
-            <div className="relative">
-              <button
-                type="button"
-                aria-label="Language"
-                aria-expanded={langOpen}
-                onClick={() => setLangOpen((v) => !v)}
-                className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-white hover:bg-white/10"
-              >
-                <Globe className="h-5 w-5" aria-hidden="true" />
-              </button>
-              {langOpen && (
-                <ul className="absolute right-0 mt-2 max-h-80 w-56 overflow-auto rounded-xl bg-ink-2 p-2 text-sm shadow-xl ring-1 ring-ink-line">
-                  {languages.map((l, i) => (
-                    <li key={l}>
-                      <button
-                        type="button"
-                        onClick={() => setLangOpen(false)}
-                        className={`block w-full rounded-md px-3 py-2 text-left text-white hover:bg-white/10 ${i === 0 ? "bg-white/10" : ""}`}
-                      >
-                        {l}
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
             <Link
               href={APP_LOGIN_URL}
               className="hidden h-9 items-center whitespace-nowrap rounded-lg px-3 text-sm font-medium text-white hover:bg-white/10 xl:inline-flex"
@@ -173,16 +135,16 @@ export function Header() {
               Login
             </Link>
             <Link
-              href="/demo"
-              className="hidden h-9 items-center whitespace-nowrap rounded-lg bg-white/10 px-3.5 text-sm font-medium text-white ring-1 ring-white/20 hover:bg-white/20 sm:inline-flex"
+              href="/contact"
+              className="hidden h-9 items-center whitespace-nowrap rounded-lg bg-white/10 px-3.5 text-sm font-medium text-white ring-1 ring-white/20 hover:bg-white/20 md:inline-flex"
             >
-              Talk to Sales
+              Talk to us
             </Link>
             <Link
-              href={APP_SIGNUP_URL}
+              href="/demo"
               className="hidden h-9 items-center whitespace-nowrap rounded-lg bg-brand-500 px-3.5 text-sm font-medium text-white hover:bg-brand-600 sm:inline-flex"
             >
-              Start Free Trial
+              Book a demo
             </Link>
             <button
               type="button"
@@ -292,15 +254,34 @@ function IndustriesPanel() {
           <PanelLink key={l.href} href={l.href} label={l.label} icon={ind.icon} />
         ))}
       </div>
-      <Link href={ind.storyHref} className="group block rounded-xl bg-white/5 p-3 text-white ring-1 ring-white/10 hover:bg-white/10">
-        <span className="bg-hatch block aspect-[16/9] rounded-lg bg-ink-3" aria-hidden="true" />
-        <span className="mt-3 block text-xs text-white/55">Customer story</span>
-        <span className="mt-1 block text-sm font-medium">Placeholder {ind.label.toLowerCase()} story headline</span>
-        <span className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-brand-300 group-hover:text-white">
-          Read Customer Story <ArrowRight className="h-4 w-4" aria-hidden="true" />
+      <IndustryStory slug={ind.storySlug} label={ind.label} />
+    </div>
+  );
+}
+
+function IndustryStory({ slug, label }: { slug?: string; label: string }) {
+  const study = slug ? getCaseStudy(slug) : undefined;
+  if (!study) {
+    return (
+      <Link href="/demo" className="group flex flex-col rounded-xl bg-gradient-to-br from-brand-600 to-ink-3 p-5 text-white ring-1 ring-white/10">
+        <Icon name="Calendar" className="h-7 w-7" />
+        <span className="mt-auto pt-10 text-xs text-white/70">{label}</span>
+        <span className="mt-1 flex items-center gap-1 text-base font-semibold">
+          See it with your questions <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
         </span>
       </Link>
-    </div>
+    );
+  }
+  return (
+    <Link href={`/customers/${study.slug}`} className="group block rounded-xl bg-white/5 p-3 text-white ring-1 ring-white/10 hover:bg-white/10">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={study.cardImage} alt={study.heroAlt} className="aspect-[2/1] w-full rounded-lg object-cover" loading="lazy" />
+      <span className="mt-3 block text-xs text-white/55">Customer story · {study.client}</span>
+      <span className="mt-1 line-clamp-2 block text-sm font-medium">{study.title}</span>
+      <span className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-brand-300 group-hover:text-white">
+        Read the story <ArrowRight className="h-4 w-4" aria-hidden="true" />
+      </span>
+    </Link>
   );
 }
 
@@ -319,7 +300,7 @@ function ResourcesPanel() {
         <Icon name="Handshake" className="h-7 w-7" />
         <span className="mt-auto pt-10 text-xs text-white/70">Partners</span>
         <span className="mt-1 flex items-center gap-1 text-base font-semibold">
-          Explore Our Partner Program <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+          Join the YourLio partner program <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
         </span>
       </Link>
     </div>
@@ -376,7 +357,7 @@ function MobileMenu() {
               ))}
             </div>
           ))}
-          <PanelLink href="/reseller" label="Explore Our Partner Program" icon="Handshake" />
+          <PanelLink href="/reseller" label="Join the YourLio partner program" icon="Handshake" />
         </MobileSection>
         {topLinks.map((l) => (
           <Link key={l.href} href={l.href} className="block border-b border-ink-line py-4 text-base font-medium text-white">
@@ -388,11 +369,11 @@ function MobileMenu() {
         </Link>
       </nav>
       <div className="grid grid-cols-2 gap-2 border-t border-ink-line p-4">
-        <Link href="/demo" className="inline-flex h-11 items-center justify-center rounded-lg bg-white/10 text-sm font-medium text-white ring-1 ring-white/20">
-          Talk to Sales
+        <Link href="/contact" className="inline-flex h-11 items-center justify-center rounded-lg bg-white/10 text-sm font-medium text-white ring-1 ring-white/20">
+          Talk to us
         </Link>
-        <Link href={APP_SIGNUP_URL} className="inline-flex h-11 items-center justify-center rounded-lg bg-brand-500 text-sm font-medium text-white">
-          Start Free Trial
+        <Link href="/demo" className="inline-flex h-11 items-center justify-center rounded-lg bg-brand-500 text-sm font-medium text-white">
+          Book a demo
         </Link>
       </div>
     </div>

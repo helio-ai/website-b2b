@@ -1,19 +1,11 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { Check, Minus } from "lucide-react";
-import {
-  CtaBand,
-  FaqSection,
-  FeatureGrid,
-  ImagePlaceholder,
-  PageHero,
-  Section,
-  SectionHeading,
-  StatRow,
-} from "@/components/ui";
-import { alternatives, ph } from "@/lib/content";
-import { APP_SIGNUP_URL, BRAND } from "@/lib/site";
-import { Button } from "@/components/ui";
+import { Check } from "lucide-react";
+import { CtaBand, FaqSection, FeatureGrid, PageHero, ProofStats, Section, SectionHeading, Button } from "@/components/ui";
+import { alternatives, getAlternative } from "@/lib/content";
+import { b2bChannels } from "@/lib/yourlio";
+import { MAIN_LINKS } from "@/lib/site";
+import { JsonLd, breadcrumbSchema, pageMeta } from "@/lib/seo";
 
 // Every known slug is prerendered by generateStaticParams; unknown slugs 404.
 export const instant = false;
@@ -24,66 +16,90 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: PageProps<"/alternatives/[slug]">): Promise<Metadata> {
   const { slug } = await params;
-  const a = alternatives.find((x) => x.slug === slug);
-  return a ? { title: `${BRAND} vs ${a.name}`, description: `Placeholder comparison of ${BRAND} and ${a.name}.` } : {};
+  const a = getAlternative(slug);
+  if (!a) return {};
+  return pageMeta({
+    title: `YourLio vs ${a.name}: AI Agent, Inbox and Pricing | YourLio`.slice(0, 60),
+    description: `Compare YourLio and ${a.name} for qualifying leads, booking calls and running one inbox. Pricing and sources checked ${a.checked}.`,
+    path: `/alternatives/${slug}`,
+  });
 }
-
-const tableGroups = [
-  { group: "Channels and calls", rows: ["Row one", "Row two", "Row three"] },
-  { group: "AI and automation", rows: ["Row one", "Row two", "Row three"] },
-  { group: "Pricing", rows: ["Row one", "Row two"] },
-  { group: "Support", rows: ["Row one", "Row two"] },
-];
 
 export default async function AlternativePage({ params }: PageProps<"/alternatives/[slug]">) {
   const { slug } = await params;
-  const a = alternatives.find((x) => x.slug === slug);
+  const a = getAlternative(slug);
   if (!a) notFound();
+  const crumbs = [
+    { name: "Home", path: "/" },
+    { name: "Compare", path: "/alternatives" },
+    { name: `YourLio vs ${a.name}`, path: `/alternatives/${a.slug}` },
+  ];
+  const faqs = [
+    { q: `Is YourLio a good ${a.name} alternative?`, a: a.verdict },
+    { q: `How does ${a.name} pricing compare with YourLio?`, a: `${a.points[0].them} ${a.points[0].us} ${a.points[1].them} ${a.points[1].us} Prices were read from public sources in ${a.checked}; confirm current terms before you decide.` },
+    { q: `When should I choose ${a.name} instead?`, a: `Choose ${a.name} if ${a.chooseThem.map((c) => c.charAt(0).toLowerCase() + c.slice(1)).join(", or ")}.` },
+    { q: `Can I try YourLio alongside ${a.name}?`, a: `Yes. Test YourLio on selected channels or pages first, and avoid having two assistants answer the same conversation. Compare answers, handoffs, booked calls and cost before you move everything.` },
+  ];
 
   return (
     <>
+      <JsonLd data={breadcrumbSchema(crumbs)} />
       <PageHero
-        eyebrow={`${BRAND} vs ${a.name}`}
+        eyebrow={`YourLio vs ${a.name}`}
         icon="Award"
-        title={`Placeholder headline: the ${a.name} alternative`}
-        art="image"
+        title={`The ${a.name} alternative for teams that sell through conversations`}
+        sub={a.verdict}
+        art="shot"
+        shot="inbox"
         ctas={
           <div className="flex flex-col gap-3 sm:flex-row">
-            <Button href="/demo" variant="secondary" size="lg">Book a demo</Button>
-            <Button href={APP_SIGNUP_URL} size="lg">Start free trial</Button>
+            <Button href="/demo" size="lg">Book a demo</Button>
+            <Button href="/pricing" variant="secondary" size="lg">See pricing</Button>
           </div>
         }
       />
 
       <Section>
-        <SectionHeading title={`Placeholder heading: where ${a.name} falls short`} sub={ph.short} />
-        <FeatureGrid cols={2} items={[1, 2, 3, 4].map((n) => ({ title: `Limitation ${n}`, icon: "Info" }))} />
+        <SectionHeading title={`${a.name} vs YourLio: a quick comparison`} sub={`Sources read in ${a.checked}. Written by YourLio.`} />
+        <div className="overflow-x-auto rounded-2xl ring-1 ring-line">
+          <table className="w-full min-w-[560px] text-left text-sm">
+            <thead className="bg-muted">
+              <tr>
+                <th scope="col" className="w-1/2 p-4 font-semibold">{a.name}</th>
+                <th scope="col" className="p-4 font-semibold text-brand-600">YourLio</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-line">
+              {a.points.map((p) => (
+                <tr key={p.them}>
+                  <td className="p-4 text-text-2">{p.them}</td>
+                  <td className="p-4 font-medium">{p.us}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p className="mt-4 text-center text-sm text-text-2">
+          Full comparison with source links:{" "}
+          <a href={`${MAIN_LINKS.compare}/${a.slug}`} target="_blank" rel="noopener" className="font-medium text-brand-600 hover:underline">
+            yourlio.com/compare/{a.slug}
+          </a>
+        </p>
       </Section>
 
       <Section tone="muted">
-        <div className="grid items-center gap-10 lg:grid-cols-2">
-          <ImagePlaceholder label="Switch story image" />
-          <div>
-            <p className="text-sm font-semibold uppercase tracking-wider text-brand-600">Customer story</p>
-            <h2 className="mt-3 text-3xl font-semibold tracking-tight">Placeholder: a customer that switched from {a.name}</h2>
-            <p className="mt-4 text-text-2">{ph.long}</p>
-            <div className="mt-6">
-              <StatRow stats={[{ value: "00%", label: "Placeholder metric" }, { value: "0x", label: "Placeholder metric" }]} />
-            </div>
-          </div>
-        </div>
-      </Section>
-
-      <Section>
-        <SectionHeading title={`${a.name} or ${BRAND}: which should you choose?`} />
+        <SectionHeading title={`${a.name} or YourLio: which should you choose?`} />
         <div className="grid gap-5 md:grid-cols-2">
-          {[a.name, BRAND].map((n, i) => (
-            <div key={n} className={`rounded-2xl p-6 ring-1 sm:p-8 ${i ? "bg-brand-50 ring-brand-100" : "bg-white ring-line"}`}>
-              <h3 className="text-xl font-semibold">Choose {n} if…</h3>
+          {[
+            { n: a.name, list: a.chooseThem, us: false },
+            { n: "YourLio", list: a.chooseUs, us: true },
+          ].map((col) => (
+            <div key={col.n} className={`rounded-2xl p-6 ring-1 sm:p-8 ${col.us ? "bg-brand-50 ring-brand-100" : "bg-white ring-line"}`}>
+              <h3 className="text-xl font-semibold">Choose {col.n} if</h3>
               <ul className="mt-5 space-y-3 text-sm">
-                {[1, 2, 3, 4].map((k) => (
+                {col.list.map((k) => (
                   <li key={k} className="flex gap-3">
-                    <Check className="mt-0.5 h-4 w-4 shrink-0 text-accent-500" aria-hidden="true" /> Placeholder reason {k}
+                    <Check className="mt-0.5 h-4 w-4 shrink-0 text-accent-500" aria-hidden="true" /> {k}
                   </li>
                 ))}
               </ul>
@@ -92,48 +108,17 @@ export default async function AlternativePage({ params }: PageProps<"/alternativ
         </div>
       </Section>
 
-      <Section tone="dark">
-        <SectionHeading dark title={`Why teams switch from ${a.name}`} />
-        <FeatureGrid dark items={[{ title: "Reason one", icon: "Inbox" }, { title: "Reason two", icon: "Sparkles" }, { title: "Reason three", icon: "TrendingUp" }]} />
-      </Section>
-
       <Section>
-        <SectionHeading title={`${a.name} vs ${BRAND}: a quick comparison`} sub="All table values are placeholders." />
-        <div className="overflow-x-auto rounded-2xl ring-1 ring-line">
-          <table className="w-full min-w-[560px] text-left text-sm">
-            <thead className="bg-muted">
-              <tr>
-                <th scope="col" className="w-1/2 p-4 font-semibold">Feature</th>
-                <th scope="col" className="p-4 font-semibold">{a.name}</th>
-                <th scope="col" className="p-4 font-semibold text-brand-600">{BRAND}</th>
-              </tr>
-            </thead>
-            {tableGroups.map((g) => (
-              <tbody key={g.group} className="divide-y divide-line">
-                <tr className="bg-muted/60">
-                  <th scope="rowgroup" colSpan={3} className="p-3 px-4 text-xs font-semibold uppercase tracking-wider text-text-2">
-                    {g.group}
-                  </th>
-                </tr>
-                {g.rows.map((r, i) => (
-                  <tr key={r}>
-                    <th scope="row" className="p-4 font-medium">{r}</th>
-                    <td className="p-4">{i % 2 ? <Check className="h-4 w-4 text-accent-500" aria-label="Yes" /> : <Minus className="h-4 w-4 text-text-3" aria-label="No" />}</td>
-                    <td className="p-4"><Check className="h-4 w-4 text-accent-500" aria-label="Yes" /></td>
-                  </tr>
-                ))}
-              </tbody>
-            ))}
-          </table>
-        </div>
+        <SectionHeading title="Every channel your leads use, one agent" />
+        <FeatureGrid items={b2bChannels.map((c) => ({ title: c.title, body: c.text, icon: c.icon }))} />
       </Section>
 
-      <Section tone="muted">
-        <SectionHeading title={`How ${BRAND} turns conversations into results`} />
-        <FeatureGrid items={["Target", "Route", "Phone", "Calendar", "Megaphone", "LifeBuoy"].map((ic, i) => ({ title: `Capability ${i + 1}`, icon: ic }))} />
+      <Section tone="dark">
+        <SectionHeading dark title="Results from published YourLio case studies" sub="Each figure comes from a case study with its own reporting period." />
+        <ProofStats dark />
       </Section>
 
-      <FaqSection count={9} />
+      <FaqSection items={faqs} />
       <CtaBand />
     </>
   );

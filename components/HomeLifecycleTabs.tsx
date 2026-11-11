@@ -1,24 +1,57 @@
 "use client";
+/* eslint-disable @next/next/no-img-element */
 
 import { useState } from "react";
 import Link from "next/link";
 import { ArrowRight, CircleCheck } from "lucide-react";
 import { Icon } from "./Icon";
 
-const defaultTabs = [
-  { key: "Capture", icon: "Target", href: "/capture-leads" },
-  { key: "Convert", icon: "TrendingUp", href: "/ai-agents" },
-  { key: "Retain", icon: "HeartHandshake", href: "/conversational-support" },
+type Stage = { key: "Capture" | "Convert" | "Retain"; icon: string; href: string; img: string; alt: string; title: string; body: string; points: string[] };
+
+const DEFAULT: Stage[] = [
+  {
+    key: "Capture",
+    icon: "Target",
+    href: "/capture-leads",
+    img: "/compare/comment-to-dm.webp",
+    alt: "An Instagram comment answered with a private DM by the YourLio agent",
+    title: "Catch every enquiry, wherever it starts",
+    body: "Website chat, popups, WhatsApp, Instagram and Facebook comments, DMs and Meta ads all open a conversation with the same agent.",
+    points: ["Replies in seconds, day or night", "See which ad or post started each chat", "QR codes and links bring offline leads to WhatsApp"],
+  },
+  {
+    key: "Convert",
+    icon: "TrendingUp",
+    href: "/lead-qualification",
+    img: "/compare/agent-is-product.webp",
+    alt: "The YourLio AI agent answering and qualifying a lead in chat",
+    title: "Qualify the lead and book the call",
+    body: "The agent asks your qualifying questions with tap options, collects contact details in the chat and offers open times. The invite lands in their email.",
+    points: ["Your questions, answered in one tap or in their own words", "Name, company, phone and work email, no form page", "Your team can step into any chat live"],
+  },
+  {
+    key: "Retain",
+    icon: "HeartHandshake",
+    href: "/conversational-support",
+    img: "/compare/journeys.webp",
+    alt: "A YourLio campaign journey with WhatsApp and email steps",
+    title: "Follow up and keep clients close",
+    body: "Existing clients get answers in the same chat, and campaigns and journeys follow up on WhatsApp, email and SMS with the full history of each contact.",
+    points: ["One memory of every contact across channels", "Campaigns and journeys with the Marketing Suite", "Replies come back to the agent and your inbox"],
+  },
 ];
 
-/** Three-step tabbed section (Capture / Convert / Retain). Used on home and industry pages. */
-export function HomeLifecycleTabs({ subject = "" }: { subject?: string }) {
+/** Three-step tabbed section (Capture / Convert / Retain). Industry pages pass their own text. */
+export function HomeLifecycleTabs({ stages }: { stages?: { capture: string; convert: string; retain: string } }) {
   const [active, setActive] = useState(0);
-  const tab = defaultTabs[active];
+  const tabs = DEFAULT.map((t) =>
+    stages ? { ...t, body: stages[t.key.toLowerCase() as "capture" | "convert" | "retain"] } : t,
+  );
+  const tab = tabs[active];
   return (
     <div>
       <div role="tablist" aria-label="Lifecycle stages" className="mx-auto mb-8 flex w-fit gap-1 rounded-xl bg-white p-1 ring-1 ring-line">
-        {defaultTabs.map((t, i) => (
+        {tabs.map((t, i) => (
           <button
             key={t.key}
             type="button"
@@ -46,18 +79,13 @@ export function HomeLifecycleTabs({ subject = "" }: { subject?: string }) {
           <p className="text-sm font-semibold uppercase tracking-wider text-brand-600">
             Step {active + 1} · {tab.key}
           </p>
-          <h3 className="mt-3 text-2xl font-semibold tracking-tight sm:text-3xl">
-            Placeholder {tab.key.toLowerCase()} heading{subject ? ` for ${subject}` : ""}
-          </h3>
-          <p className="mt-4 text-text-2">
-            Placeholder paragraph for the {tab.key.toLowerCase()} stage. Describe what the customer can do at this step and
-            the result they should expect.
-          </p>
+          <h3 className="mt-3 text-2xl font-semibold tracking-tight sm:text-3xl">{tab.title}</h3>
+          <p className="mt-4 text-text-2">{tab.body}</p>
           <ul className="mt-6 space-y-3">
-            {[1, 2, 3].map((n) => (
-              <li key={n} className="flex gap-3 text-sm">
+            {tab.points.map((p) => (
+              <li key={p} className="flex gap-3 text-sm">
                 <CircleCheck className="mt-0.5 h-5 w-5 shrink-0 text-accent-500" aria-hidden="true" />
-                Placeholder {tab.key.toLowerCase()} point {n}
+                {p}
               </li>
             ))}
           </ul>
@@ -65,12 +93,8 @@ export function HomeLifecycleTabs({ subject = "" }: { subject?: string }) {
             Learn more <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
           </Link>
         </div>
-        <div
-          role="img"
-          aria-label={`${tab.key} illustration placeholder`}
-          className="bg-hatch flex aspect-[4/3] items-center justify-center rounded-2xl bg-brand-50/60 ring-1 ring-line"
-        >
-          <span className="rounded-full bg-white px-3 py-1 text-xs font-medium text-text-2 ring-1 ring-line">{tab.key} visual</span>
+        <div className="overflow-hidden rounded-2xl ring-1 ring-line">
+          <img src={tab.img} alt={tab.alt} width={1200} height={675} loading="lazy" className="h-auto w-full" />
         </div>
       </div>
     </div>

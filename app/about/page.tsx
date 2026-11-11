@@ -1,88 +1,93 @@
+/* eslint-disable @next/next/no-img-element */
 import type { Metadata } from "next";
-import { CtaBand, ImagePlaceholder, PageHero, Section, SectionHeading, SuccessPillars, StatRow } from "@/components/ui";
-import { ph } from "@/lib/content";
-import { BRAND } from "@/lib/site";
+import { CtaBand, FeatureGrid, PageHero, Section, SectionHeading, StatRow, SuccessPillars, Button } from "@/components/ui";
+import { team } from "@/lib/yourlio";
+import { MAIN_LINKS } from "@/lib/site";
+import { JsonLd, ORG_ID, pageMeta } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "About us",
-  description: `Placeholder description of ${BRAND}.`,
-};
+export const metadata: Metadata = pageMeta({
+  title: "About YourLio: the Team Behind YourLio for Business | YourLio",
+  description: "YourLio AI, formerly Helio AI, builds AI agents, a shared inbox and CRM for businesses that sell through conversations. Built in Bengaluru.",
+  path: "/about",
+});
 
 export default function AboutPage() {
   return (
     <>
-      <PageHero eyebrow="About us" icon="Building2" title="Placeholder headline about the company" art="image" />
+      <JsonLd data={{ "@type": "AboutPage", name: "About YourLio", about: { "@id": ORG_ID } }} />
+      <PageHero
+        eyebrow="About YourLio"
+        icon="Building2"
+        title="We build the AI that answers every enquiry"
+        sub="YourLio AI, formerly Helio AI, makes one AI agent, shared inbox and CRM that answers customers on every channel with one memory of each person. It is used by 100+ brands and rated 5.0 on the Shopify App Store."
+        art="shot"
+        shot="results"
+        ctas={
+          <div className="flex flex-col gap-3 sm:flex-row">
+            <Button href="/demo" size="lg">Book a demo</Button>
+            <Button href={MAIN_LINKS.about} variant="secondary" size="lg">About us on yourlio.com</Button>
+          </div>
+        }
+      />
 
       <Section>
         <div className="grid gap-6 md:grid-cols-2">
-          {["Vision", "Mission"].map((k) => (
-            <div key={k} className="rounded-3xl bg-muted p-8 ring-1 ring-line sm:p-10">
-              <p className="text-sm font-semibold uppercase tracking-wider text-brand-600">{k}</p>
-              <h2 className="mt-3 text-2xl font-semibold tracking-tight sm:text-3xl">Placeholder {k.toLowerCase()} statement</h2>
-              <p className="mt-4 text-text-2">{ph.medium}</p>
-            </div>
-          ))}
-        </div>
-      </Section>
-
-      <Section tone="muted">
-        <div className="grid items-center gap-10 lg:grid-cols-2">
-          <div>
-            <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">Our story</h2>
-            <p className="mt-4 text-text-2">{ph.long}</p>
-            <p className="mt-4 text-text-2">{ph.long}</p>
+          <div className="rounded-3xl bg-muted p-8 ring-1 ring-line sm:p-10">
+            <p className="text-sm font-semibold uppercase tracking-wider text-brand-600">What we do</p>
+            <h2 className="mt-3 text-2xl font-semibold tracking-tight sm:text-3xl">One agent, one memory, every channel</h2>
+            <p className="mt-4 text-text-2">
+              Most businesses answer customers across a website widget, WhatsApp, Instagram, email and the phone, each with its own tool and
+              its own half of the story. YourLio puts one AI agent and one record of each person behind all of them.
+            </p>
           </div>
-          <ImagePlaceholder label="Team photo" />
+          <div className="rounded-3xl bg-muted p-8 ring-1 ring-line sm:p-10">
+            <p className="text-sm font-semibold uppercase tracking-wider text-brand-600">Who it is for</p>
+            <h2 className="mt-3 text-2xl font-semibold tracking-tight sm:text-3xl">Shopify brands and every business that sells by conversation</h2>
+            <p className="mt-4 text-text-2">
+              yourlio.com serves Shopify brands. YourLio for business is for teams that sell through a call, a quote, a site visit or an
+              appointment, from agencies and IT services to clinics, schools and real estate.
+            </p>
+          </div>
         </div>
-        <div className="mt-12">
-          <StatRow
-            stats={[
-              { value: "0,000+", label: "Placeholder customers" },
-              { value: "00+", label: "Placeholder countries" },
-              { value: "000+", label: "Placeholder team members" },
-              { value: "0000", label: "Founded" },
-            ]}
-          />
-        </div>
-      </Section>
-
-      <Section>
-        <SectionHeading title="Major milestones" />
-        <ol className="relative mx-auto max-w-3xl border-s border-line ps-8">
-          {Array.from({ length: 6 }, (_, i) => (
-            <li key={i} className="mb-10 last:mb-0">
-              <span className="absolute -start-2 mt-1.5 h-4 w-4 rounded-full bg-brand-500 ring-4 ring-white" aria-hidden="true" />
-              <p className="text-sm font-semibold text-brand-600">Year {i + 1}</p>
-              <h3 className="mt-1 text-lg font-semibold">Placeholder milestone {i + 1}</h3>
-              <p className="mt-1 text-sm text-text-2">{ph.short}</p>
-            </li>
-          ))}
-        </ol>
       </Section>
 
       <Section tone="muted">
-        <SectionHeading title="Our awards" />
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
-          {Array.from({ length: 6 }, (_, i) => (
-            <div key={i} className="flex aspect-square flex-col items-center justify-center rounded-2xl bg-white p-4 text-center ring-1 ring-line">
-              <span className="h-12 w-12 rounded-full bg-brand-100" aria-hidden="true" />
-              <span className="mt-3 text-xs font-medium text-text-2">Award {i + 1}</span>
-            </div>
+        <StatRow
+          stats={[
+            { value: "100+", label: "brands use YourLio" },
+            { value: "5.0", label: "rating on the Shopify App Store" },
+            { value: "16", label: "published case studies" },
+            { value: "Bengaluru", label: "where the team is based" },
+          ]}
+        />
+      </Section>
+
+      <Section>
+        <SectionHeading title="The team" sub="The people building YourLio." />
+        <div className="grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-5">
+          {team.map((p) => (
+            <figure key={p.name}>
+              <div className="aspect-square overflow-hidden rounded-2xl bg-muted ring-1 ring-line">
+                <img src={p.photo} alt={p.name} loading="lazy" className="h-full w-full object-cover" />
+              </div>
+              <figcaption className="mt-3">
+                <span className="block font-semibold">{p.name}</span>
+                <span className="block text-sm text-text-2">{p.role}</span>
+              </figcaption>
+            </figure>
           ))}
         </div>
       </Section>
 
-      <Section>
-        <SectionHeading title="Our leadership" />
-        <div className="grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-4">
-          {Array.from({ length: 8 }, (_, i) => (
-            <div key={i}>
-              <ImagePlaceholder label="Portrait" ratio="aspect-square" />
-              <p className="mt-3 font-semibold">Person Name</p>
-              <p className="text-sm text-text-2">Job title</p>
-            </div>
-          ))}
-        </div>
+      <Section tone="muted">
+        <SectionHeading title="Company details" />
+        <FeatureGrid
+          items={[
+            { title: "Legal name", body: "HELIOAI AGENTIC SYSTEMS PRIVATE LIMITED", icon: "Building2" },
+            { title: "Formerly", body: "Helio AI. The Shopify App Store listing keeps the helio-ai address.", icon: "Layers" },
+            { title: "Contact", body: "prakash@helioai.tech", icon: "Mail" },
+          ]}
+        />
       </Section>
 
       <SuccessPillars />

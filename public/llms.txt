@@ -1,3 +1,65 @@
-# YourBrand
+# YourLio for business
 
-> Placeholder llms.txt. Describe your product and list key pages here.
+> YourLio for business is an AI agent, shared inbox and CRM for businesses that sell through a conversation: a call, a quote, a site visit or an appointment. It answers enquiries on the website, WhatsApp, Instagram and Facebook, asks the business's own qualifying questions, collects contact details in the chat and books the call, with one memory of each lead across channels.
+
+YourLio AI was previously called Helio AI and is developed by HELIOAI AGENTIC SYSTEMS PRIVATE LIMITED, Bengaluru. Shopify brands are served at https://yourlio.com.
+
+## Key facts
+- Channels: website chat and popups, WhatsApp, Instagram, Facebook Messenger, email, SMS, AI calls, and leads from Meta ads, all in one shared inbox.
+- AI Agent plans (USD): Starter $49/month for 250 AI conversations, then $0.30 each; Growth $119 for 700, then $0.25; Pro $249 for 2,500, then $0.15; Scale $399 for 5,000, then $0.12. Unlimited from $699 for up to 30,000 conversations. Unlimited team seats.
+- AI CRM & Helpdesk: one flat price for the whole team, quoted on a call. Ticket ownership, assignments, routing by rules, teams, shifts and availability, WhatsApp and phone calls from the browser with recordings and AI transcripts.
+- Add ons: Social Suite $49/month (comment to DM, story replies), Marketing Suite $199/month (campaigns and journeys on WhatsApp, email, SMS and web push). Meta WhatsApp fees are paid to Meta directly, with no YourLio markup.
+- Proof: rated 5.0 on the Shopify App Store, used by 100+ brands, 16 published case studies with reporting periods.
+
+## Product
+- [What is YourLio for business?](https://business.yourlio.com/omnichannel-ai-crm-conversation-platform)
+- [AI Agents](https://business.yourlio.com/ai-agents)
+- [AI Agents for Lead Qualification](https://business.yourlio.com/ai-agents-for-lead-qualification)
+- [Qualify Leads](https://business.yourlio.com/lead-qualification)
+- [Route Leads](https://business.yourlio.com/lead-distribution)
+- [Book Appointments](https://business.yourlio.com/book-a-meeting)
+- [Team Inbox](https://business.yourlio.com/team-inbox)
+- [Conversational Support](https://business.yourlio.com/conversational-support)
+- [Leads from Meta ads](https://business.yourlio.com/capture-leads-from-ads)
+- [Instagram and Facebook leads](https://business.yourlio.com/capture-leads)
+- [Website chat and popups](https://business.yourlio.com/capture-website-leads)
+- [Offline leads with QR codes and links](https://business.yourlio.com/capture-offline-leads)
+- [Campaigns and newsletters](https://business.yourlio.com/send-promotions-and-newsletters)
+- [Follow ups and reminders](https://business.yourlio.com/send-renewal-reminders)
+- [Customer feedback](https://business.yourlio.com/surveys)
+- [WhatsApp Business API](https://business.yourlio.com/whatsapp-business-api)
+- [WhatsApp and AI calling](https://business.yourlio.com/whatsapp-business-calling-api)
+- [WhatsApp for multiple users](https://business.yourlio.com/whatsapp-business-multiple-users)
+- [WhatsApp bulk messages](https://business.yourlio.com/whatsapp-bulk-message)
+- [WhatsApp CRM integration](https://business.yourlio.com/whatsapp-crm-integration)
+- [Why YourLio](https://business.yourlio.com/why-choose-us)
+
+## Industries
+- [Security and AV](https://business.yourlio.com/industry/security-and-av)
+- [IT services](https://business.yourlio.com/industry/it-services)
+- [Software and SaaS](https://business.yourlio.com/industry/software-and-saas)
+- [Manufacturing and wholesale](https://business.yourlio.com/industry/manufacturing-and-wholesale)
+- [Agencies and consulting](https://business.yourlio.com/industry/agencies-and-consulting)
+- [Real estate](https://business.yourlio.com/industry/real-estate)
+- [Events and webinars](https://business.yourlio.com/industry/events-and-webinars)
+- [Finance and insurance](https://business.yourlio.com/industry/finance-and-insurance)
+- [Retail](https://business.yourlio.com/industry/retail)
+- [Education](https://business.yourlio.com/industry/education)
+- [Healthcare](https://business.yourlio.com/industry/healthcare)
+- [Professional services](https://business.yourlio.com/industry/professional-services)
+- [Automotive](https://business.yourlio.com/industry/automotive)
+- [Travel](https://business.yourlio.com/industry/travel)
+
+## Evidence and comparisons
+- [Customer stories](https://business.yourlio.com/customers): 16 published YourLio case studies with reporting periods.
+- [YourLio vs Intercom](https://business.yourlio.com/alternatives/intercom)
+- [YourLio vs Manychat](https://business.yourlio.com/alternatives/manychat)
+- [YourLio vs Tidio](https://business.yourlio.com/alternatives/tidio)
+- [Shopify App Store reviews](https://apps.shopify.com/helio-ai/reviews)
+
+## Other
+- [Pricing](https://business.yourlio.com/pricing)
+- [FAQs](https://business.yourlio.com/faqs)
+- [Integrations](https://business.yourlio.com/integrations)
+- [Book a demo](https://business.yourlio.com/demo)
+- [Sitemap](https://business.yourlio.com/sitemap.xml)

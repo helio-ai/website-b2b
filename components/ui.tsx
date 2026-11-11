@@ -1,8 +1,10 @@
+/* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
 import { ArrowRight, Plus, Star } from "lucide-react";
 import { Icon } from "./Icon";
-import { APP_SIGNUP_URL, BRAND } from "@/lib/site";
-import { ph } from "@/lib/content";
+import { BRAND, SHOPIFY_REVIEWS_URL } from "@/lib/site";
+import { customerLogos, pillars, reviewUrl, reviews, type CaseStudy } from "@/lib/yourlio";
+import { JsonLd, faqSchema } from "@/lib/seo";
 
 /* ------------------------------------------------------------------ */
 /* Layout primitives                                                    */
@@ -23,11 +25,7 @@ export function Section({
   tone?: "light" | "muted" | "dark";
   id?: string;
 }) {
-  const tones = {
-    light: "bg-surface text-text",
-    muted: "bg-muted text-text",
-    dark: "bg-ink text-white",
-  };
+  const tones = { light: "bg-surface text-text", muted: "bg-muted text-text", dark: "bg-ink text-white" };
   return (
     <section id={id} className={`py-16 sm:py-20 lg:py-24 ${tones[tone]} ${className}`}>
       <Container>{children}</Container>
@@ -51,9 +49,7 @@ export function SectionHeading({
   return (
     <div className={`mb-10 sm:mb-14 ${align === "center" ? "mx-auto max-w-3xl text-center" : "max-w-2xl"}`}>
       {eyebrow && (
-        <p className={`mb-3 text-sm font-semibold uppercase tracking-wider ${dark ? "text-brand-300" : "text-brand-600"}`}>
-          {eyebrow}
-        </p>
+        <p className={`mb-3 text-sm font-semibold uppercase tracking-wider ${dark ? "text-brand-300" : "text-brand-600"}`}>{eyebrow}</p>
       )}
       <h2 className="text-3xl font-semibold tracking-tight text-balance sm:text-4xl">{title}</h2>
       {sub && <p className={`mt-4 text-base sm:text-lg ${dark ? "text-white/70" : "text-text-2"}`}>{sub}</p>}
@@ -65,7 +61,7 @@ export function SectionHeading({
 /* Buttons                                                              */
 /* ------------------------------------------------------------------ */
 
-type BtnVariant = "primary" | "secondary" | "ghost-dark" | "outline" | "white";
+type BtnVariant = "primary" | "secondary" | "outline" | "white";
 
 export function Button({
   href,
@@ -83,14 +79,15 @@ export function Button({
   const v = {
     primary: "bg-brand-500 text-white hover:bg-brand-600",
     secondary: "bg-white/10 text-white ring-1 ring-white/20 hover:bg-white/20",
-    "ghost-dark": "text-white hover:bg-white/10",
     outline: "bg-white text-text ring-1 ring-line hover:bg-muted",
     white: "bg-white text-ink hover:bg-white/90",
   }[variant];
   const s = { sm: "h-8 px-3 text-sm", md: "h-10 px-4 text-sm", lg: "h-12 px-6 text-base" }[size];
+  const external = href.startsWith("http");
   return (
     <Link
       href={href}
+      {...(external ? { target: "_blank", rel: "noopener" } : {})}
       className={`inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-400 ${v} ${s} ${className}`}
     >
       {children}
@@ -101,11 +98,11 @@ export function Button({
 export function CtaPair({ dark = true, center = false }: { dark?: boolean; center?: boolean }) {
   return (
     <div className={`flex flex-col gap-3 sm:flex-row ${center ? "sm:justify-center" : ""}`}>
-      <Button href="/demo" variant={dark ? "secondary" : "outline"} size="lg">
-        Talk to Sales
+      <Button href="/demo" variant="primary" size="lg">
+        Book a demo
       </Button>
-      <Button href={APP_SIGNUP_URL} variant="primary" size="lg">
-        Start Free Trial
+      <Button href="/pricing" variant={dark ? "secondary" : "outline"} size="lg">
+        See pricing
       </Button>
     </div>
   );
@@ -124,56 +121,84 @@ export function TextLink({ href, children, dark = false }: { href: string; child
 }
 
 /* ------------------------------------------------------------------ */
-/* Visual placeholders (swap for real screenshots or illustrations)    */
+/* Product visuals                                                      */
 /* ------------------------------------------------------------------ */
 
-export function ImagePlaceholder({
-  label = "Image",
-  ratio = "aspect-[4/3]",
-  dark = false,
-  className = "",
-}: {
-  label?: string;
-  ratio?: string;
-  dark?: boolean;
-  className?: string;
-}) {
+export type ShotKey = "inbox" | "helpdesk" | "channels" | "comment-to-dm" | "journeys" | "profiles" | "agent" | "results";
+
+const SHOTS: Record<ShotKey, { src: string; srcSet?: string; w: number; h: number; alt: string }> = {
+  inbox: { src: "/product-creatives/yourlio-shopify-crm-shared-inbox-light-1600.webp", w: 1600, h: 816, alt: "YourLio shared inbox with every channel and the customer record beside each conversation" },
+  helpdesk: { src: "/product-creatives/yourlio-shopify-ai-helpdesk-light-1600.webp", w: 1600, h: 812, alt: "YourLio AI helpdesk with tickets, assignments and an AI summary" },
+  channels: { src: "/compare/every-channel.webp", srcSet: "/compare/every-channel.webp 1200w, /compare/every-channel@2x.webp 2400w", w: 2400, h: 1350, alt: "Website chat, WhatsApp, Instagram, Facebook and email conversations in one YourLio view" },
+  "comment-to-dm": { src: "/compare/comment-to-dm.webp", srcSet: "/compare/comment-to-dm.webp 1200w, /compare/comment-to-dm@2x.webp 2400w", w: 2400, h: 1350, alt: "An Instagram comment answered with a private DM by the YourLio agent" },
+  journeys: { src: "/compare/journeys.webp", srcSet: "/compare/journeys.webp 1200w, /compare/journeys@2x.webp 2400w", w: 2400, h: 1350, alt: "A YourLio campaign journey with WhatsApp and email steps" },
+  profiles: { src: "/compare/shopper-profiles.webp", srcSet: "/compare/shopper-profiles.webp 1200w, /compare/shopper-profiles@2x.webp 2400w", w: 2400, h: 1482, alt: "A YourLio customer profile with the memory of every conversation" },
+  agent: { src: "/compare/agent-is-product.webp", srcSet: "/compare/agent-is-product.webp 1200w, /compare/agent-is-product@2x.webp 2400w", w: 2400, h: 1350, alt: "The YourLio AI agent answering a question in chat" },
+  results: { src: "/compare/what-it-earned.webp", srcSet: "/compare/what-it-earned.webp 1200w, /compare/what-it-earned@2x.webp 2400w", w: 2400, h: 1350, alt: "YourLio dashboard showing conversations and the results they produced" },
+};
+
+export function ProductShot({ shot, className = "", priority = false }: { shot: ShotKey; className?: string; priority?: boolean }) {
+  const s = SHOTS[shot] ?? SHOTS.inbox;
   return (
-    <div
-      role="img"
-      aria-label={`${label} placeholder`}
-      className={`bg-hatch flex ${ratio} w-full items-center justify-center rounded-2xl ring-1 ${dark ? "bg-ink-2 ring-ink-line text-white/40" : "bg-brand-50/60 ring-line text-text-3"} ${className}`}
-    >
-      <span className="rounded-full bg-white/70 px-3 py-1 text-xs font-medium text-text-2 ring-1 ring-line">{label}</span>
+    <div className={`overflow-hidden rounded-2xl bg-white shadow-2xl ring-1 ring-black/5 ${className}`}>
+      <img
+        src={s.src}
+        srcSet={s.srcSet}
+        sizes="(min-width: 1024px) 600px, 100vw"
+        width={s.w}
+        height={s.h}
+        alt={s.alt}
+        loading={priority ? "eager" : "lazy"}
+        decoding="async"
+        className="h-auto w-full"
+      />
     </div>
   );
 }
 
-/** A generic chat-app mock used as hero art. Purely decorative. */
-export function AppMock({ className = "" }: { className?: string }) {
-  const rows = [
-    { name: "Contact A", msg: "Hi, is this still available?", ch: "bg-accent-500", active: true },
-    { name: "Contact B", msg: "Can I book for Friday?", ch: "bg-brand-400" },
-    { name: "Contact C", msg: "Thanks for the quick reply", ch: "bg-amber-400" },
-    { name: "Contact D", msg: "What are your opening hours?", ch: "bg-rose-400" },
-    { name: "Contact E", msg: "Sent a photo", ch: "bg-sky-400" },
-  ];
+export function Photo({ src, alt, ratio = "aspect-[3/2]", className = "" }: { src: string; alt: string; ratio?: string; className?: string }) {
+  return (
+    <div className={`overflow-hidden rounded-2xl bg-muted ring-1 ring-line ${ratio} ${className}`}>
+      <img src={src} alt={alt} loading="lazy" decoding="async" className="h-full w-full object-cover" />
+    </div>
+  );
+}
+
+export function ImagePlaceholder({ label = "Image", ratio = "aspect-[4/3]", dark = false, className = "" }: { label?: string; ratio?: string; dark?: boolean; className?: string }) {
   return (
     <div
-      aria-hidden="true"
-      className={`overflow-hidden rounded-2xl bg-white text-left text-text shadow-2xl ring-1 ring-black/5 ${className}`}
+      role="img"
+      aria-label={label}
+      className={`bg-hatch flex ${ratio} w-full items-center justify-center rounded-2xl ring-1 ${dark ? "bg-ink-2 ring-ink-line" : "bg-brand-50/60 ring-line"} ${className}`}
     >
+      <img src="/brand/mark-light-bg.png" alt="" className="h-14 w-auto opacity-80" />
+    </div>
+  );
+}
+
+/** Sample lead conversation used as hero art. Illustrative leads, not customers. */
+export function AppMock({ className = "" }: { className?: string }) {
+  const rows = [
+    { name: "Northwind Offices", msg: "We need CCTV for our office", ch: "bg-accent-500", active: true },
+    { name: "Harbor Foods", msg: "Bulk quote for packaging boxes", ch: "bg-emerald-500" },
+    { name: "Oakridge Clinics", msg: "Website and SEO rebuild", ch: "bg-pink-500" },
+    { name: "Lumen Freight", msg: "Can our sales team try this?", ch: "bg-sky-500" },
+    { name: "Brightline Legal", msg: "IT support for 40 people", ch: "bg-amber-500" },
+  ];
+  return (
+    <div aria-hidden="true" className={`overflow-hidden rounded-2xl bg-white text-left text-text shadow-2xl ring-1 ring-black/5 ${className}`}>
       <div className="flex items-center gap-1.5 border-b border-line bg-muted px-4 py-2.5">
         <span className="h-2.5 w-2.5 rounded-full bg-rose-300" />
         <span className="h-2.5 w-2.5 rounded-full bg-amber-300" />
         <span className="h-2.5 w-2.5 rounded-full bg-emerald-300" />
-        <span className="ml-3 h-2 w-32 rounded bg-line" />
+        <span className="ml-3 text-[11px] font-medium text-text-3">YourLio inbox</span>
       </div>
       <div className="grid grid-cols-12">
         <div className="col-span-5 border-r border-line sm:col-span-4">
           {rows.map((r) => (
             <div key={r.name} className={`flex items-center gap-2.5 px-3 py-3 ${r.active ? "bg-brand-50" : ""}`}>
-              <span className="relative h-8 w-8 shrink-0 rounded-full bg-line">
+              <span className="relative inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-line text-[10px] font-semibold text-text-2">
+                {r.name.slice(0, 2)}
                 <span className={`absolute -right-0.5 -bottom-0.5 h-3 w-3 rounded-full ring-2 ring-white ${r.ch}`} />
               </span>
               <span className="min-w-0">
@@ -183,14 +208,20 @@ export function AppMock({ className = "" }: { className?: string }) {
             </div>
           ))}
         </div>
-        <div className="col-span-7 flex flex-col gap-3 p-4 sm:col-span-8">
-          <div className="max-w-[80%] rounded-2xl rounded-tl-sm bg-muted px-3 py-2 text-xs">Hi, is this still available?</div>
-          <div className="ml-auto max-w-[80%] rounded-2xl rounded-tr-sm bg-brand-500 px-3 py-2 text-xs text-white">
-            Yes! Would you like to reserve one?
+        <div className="col-span-7 flex flex-col gap-2.5 p-4 sm:col-span-8">
+          <div className="max-w-[80%] rounded-2xl rounded-tl-sm bg-muted px-3 py-2 text-xs">We need CCTV for our office</div>
+          <div className="ml-auto max-w-[85%] rounded-2xl rounded-tr-sm bg-brand-500 px-3 py-2 text-xs text-white">
+            Happy to help. Which areas need coverage?
           </div>
-          <div className="max-w-[80%] rounded-2xl rounded-tl-sm bg-muted px-3 py-2 text-xs">Can I pick it up tomorrow?</div>
-          <div className="ml-auto flex max-w-[85%] items-center gap-2 rounded-2xl rounded-tr-sm bg-brand-50 px-3 py-2 text-xs text-brand-700 ring-1 ring-brand-100">
-            <Icon name="Sparkles" className="h-3.5 w-3.5" /> AI suggested reply ready
+          <div className="ml-auto flex flex-wrap justify-end gap-1.5">
+            {["Front entry", "Lobby & hallways", "Full perimeter + inside"].map((o, i) => (
+              <span key={o} className={`rounded-full px-2.5 py-1 text-[11px] ring-1 ${i === 2 ? "bg-brand-500 text-white ring-brand-500" : "bg-white text-brand-700 ring-brand-200"}`}>
+                {o}
+              </span>
+            ))}
+          </div>
+          <div className="mt-1 flex items-center gap-2 rounded-xl bg-emerald-50 px-3 py-2 text-[11px] text-emerald-800 ring-1 ring-emerald-200">
+            <Icon name="Calendar" className="h-3.5 w-3.5" /> Site Survey Call booked: Wed, 2:00 pm
           </div>
           <div className="mt-auto hidden h-9 rounded-lg border border-line sm:block" />
         </div>
@@ -205,9 +236,7 @@ export function AppMock({ className = "" }: { className?: string }) {
 
 export function IconBadge({ name, dark = false }: { name: string; dark?: boolean }) {
   return (
-    <span
-      className={`inline-flex h-10 w-10 items-center justify-center rounded-xl ${dark ? "bg-white/10 text-brand-300" : "bg-brand-50 text-brand-600"}`}
-    >
+    <span className={`inline-flex h-10 w-10 items-center justify-center rounded-xl ${dark ? "bg-white/10 text-brand-300" : "bg-brand-50 text-brand-600"}`}>
       <Icon name={name} className="h-5 w-5" />
     </span>
   );
@@ -215,26 +244,15 @@ export function IconBadge({ name, dark = false }: { name: string; dark?: boolean
 
 export type FeatureItem = { title: string; body?: string; icon?: string };
 
-export function FeatureGrid({
-  items,
-  cols = 3,
-  dark = false,
-}: {
-  items: FeatureItem[];
-  cols?: 2 | 3 | 4;
-  dark?: boolean;
-}) {
+export function FeatureGrid({ items, cols = 3, dark = false }: { items: FeatureItem[]; cols?: 2 | 3 | 4; dark?: boolean }) {
   const c = { 2: "sm:grid-cols-2", 3: "sm:grid-cols-2 lg:grid-cols-3", 4: "sm:grid-cols-2 lg:grid-cols-4" }[cols];
   return (
     <div className={`grid gap-4 sm:gap-6 ${c}`}>
       {items.map((f) => (
-        <div
-          key={f.title}
-          className={`rounded-2xl p-6 ring-1 ${dark ? "bg-ink-2 ring-ink-line" : "bg-white ring-line"}`}
-        >
+        <div key={f.title} className={`rounded-2xl p-6 ring-1 ${dark ? "bg-ink-2 ring-ink-line" : "bg-white ring-line"}`}>
           <IconBadge name={f.icon ?? "Sparkles"} dark={dark} />
           <h3 className="mt-4 text-lg font-semibold">{f.title}</h3>
-          <p className={`mt-2 text-sm leading-relaxed ${dark ? "text-white/65" : "text-text-2"}`}>{f.body ?? ph.medium}</p>
+          {f.body && <p className={`mt-2 text-sm leading-relaxed ${dark ? "text-white/65" : "text-text-2"}`}>{f.body}</p>}
         </div>
       ))}
     </div>
@@ -247,15 +265,15 @@ export function SplitFeature({
   body,
   bullets,
   reverse = false,
-  imageLabel = "Product screenshot",
+  visual,
   link,
 }: {
   eyebrow?: string;
   title: string;
-  body?: string;
+  body: string;
   bullets?: string[];
   reverse?: boolean;
-  imageLabel?: string;
+  visual: React.ReactNode;
   link?: { href: string; label: string };
 }) {
   return (
@@ -263,7 +281,7 @@ export function SplitFeature({
       <div className={reverse ? "lg:order-2" : ""}>
         {eyebrow && <p className="mb-3 text-sm font-semibold uppercase tracking-wider text-brand-600">{eyebrow}</p>}
         <h3 className="text-2xl font-semibold tracking-tight sm:text-3xl">{title}</h3>
-        <p className="mt-4 text-text-2">{body ?? ph.long}</p>
+        <p className="mt-4 text-text-2">{body}</p>
         {bullets && (
           <ul className="mt-6 space-y-3">
             {bullets.map((b) => (
@@ -280,38 +298,53 @@ export function SplitFeature({
           </div>
         )}
       </div>
-      <ImagePlaceholder label={imageLabel} />
+      <div>{visual}</div>
     </div>
   );
 }
 
-export function StatRow({ stats, dark = false }: { stats: { value: string; label: string }[]; dark?: boolean }) {
+export function StatRow({ stats, dark = false }: { stats: { value: string; label: string; note?: string }[]; dark?: boolean }) {
   return (
-    <dl className={`grid grid-cols-2 gap-4 sm:gap-6 ${stats.length >= 4 ? "lg:grid-cols-4" : "lg:grid-cols-3"}`}>
+    <dl className={`grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 ${stats.length >= 4 ? "lg:grid-cols-4" : "lg:grid-cols-3"}`}>
       {stats.map((s, i) => (
         <div key={i} className={`rounded-2xl p-6 ring-1 ${dark ? "bg-ink-2 ring-ink-line" : "bg-white ring-line"}`}>
-          <dt className={`text-sm ${dark ? "text-white/60" : "text-text-2"}`}>{s.label}</dt>
-          <dd className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">{s.value}</dd>
+          <dd className="text-3xl font-semibold tracking-tight sm:text-4xl">{s.value}</dd>
+          <dt className={`mt-2 text-sm ${dark ? "text-white/70" : "text-text-2"}`}>{s.label}</dt>
+          {s.note && <p className={`mt-3 text-xs ${dark ? "text-white/45" : "text-text-3"}`}>{s.note}</p>}
         </div>
       ))}
     </dl>
   );
 }
 
-export function LogoStrip({ count = 7, dark = false, label }: { count?: number; dark?: boolean; label?: string }) {
-  const logos = Array.from({ length: count }, (_, i) => `Logo ${i + 1}`);
+/** Real proof from published YourLio case studies, for any page. */
+export function ProofStats({ dark = false }: { dark?: boolean }) {
+  return (
+    <StatRow
+      dark={dark}
+      stats={[
+        { value: "718", label: "home eye test bookings from chats, no call required", note: "YourSpex case study" },
+        { value: "92%", label: "of chats resolved without a human handoff", note: "Cureayu case study" },
+        { value: "15,000+", label: "chats handled in 46 days for a wholesale marketplace", note: "DeoDap case study" },
+        { value: "5.0", label: "rating on the Shopify App Store, used by 100+ brands", note: "As of October 2026" },
+      ]}
+    />
+  );
+}
+
+export function LogoStrip({ dark = false, label }: { dark?: boolean; label?: string }) {
   return (
     <div>
       {label && <p className={`mb-6 text-center text-sm ${dark ? "text-white/60" : "text-text-2"}`}>{label}</p>}
       <div className="relative overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
-        <div className="animate-marquee flex w-max gap-4">
-          {[...logos, ...logos].map((l, i) => (
+        <div className="animate-marquee flex w-max items-center gap-4">
+          {[...customerLogos, ...customerLogos].map((l, i) => (
             <div
               key={i}
-              aria-hidden={i >= count}
-              className={`flex h-14 w-36 shrink-0 items-center justify-center rounded-xl text-sm font-semibold ${dark ? "bg-white/5 text-white/50" : "bg-muted text-text-3"}`}
+              aria-hidden={i >= customerLogos.length}
+              className={`flex h-16 w-40 shrink-0 items-center justify-center rounded-xl px-5 ${dark ? "bg-white" : "bg-white ring-1 ring-line"}`}
             >
-              {l}
+              <img src={l.src} alt={i < customerLogos.length ? l.name : ""} loading="lazy" className="max-h-9 w-auto max-w-full object-contain" />
             </div>
           ))}
         </div>
@@ -320,7 +353,7 @@ export function LogoStrip({ count = 7, dark = false, label }: { count?: number; 
   );
 }
 
-export function FaqAccordion({ items, dark = false }: { items: { q: string; a?: string }[]; dark?: boolean }) {
+export function FaqAccordion({ items, dark = false }: { items: { q: string; a: string }[]; dark?: boolean }) {
   return (
     <div className={`divide-y rounded-2xl ring-1 ${dark ? "divide-ink-line bg-ink-2 ring-ink-line" : "divide-line bg-white ring-line"}`}>
       {items.map((it) => (
@@ -329,49 +362,51 @@ export function FaqAccordion({ items, dark = false }: { items: { q: string; a?: 
             <h3 className="text-base">{it.q}</h3>
             <Plus className="accordion-icon h-5 w-5 shrink-0 transition-transform" aria-hidden="true" />
           </summary>
-          <p className={`pb-5 text-sm leading-relaxed ${dark ? "text-white/65" : "text-text-2"}`}>{it.a ?? ph.answer}</p>
+          <p className={`pb-5 text-sm leading-relaxed ${dark ? "text-white/65" : "text-text-2"}`}>{it.a}</p>
         </details>
       ))}
     </div>
   );
 }
 
-export function FaqSection({ title = "Frequently asked questions", count = 8, items }: { title?: string; count?: number; items?: { q: string; a?: string }[] }) {
-  const list = items ?? Array.from({ length: count }, (_, i) => ({ q: `Placeholder question ${i + 1}?` }));
+/** FAQ block plus FAQPage structured data for answer engines. */
+export function FaqSection({ title = "Frequently asked questions", items }: { title?: string; items: { q: string; a: string }[] }) {
   return (
     <Section tone="muted">
+      <JsonLd data={faqSchema(items)} />
       <div className="grid gap-10 lg:grid-cols-[1fr_2fr]">
         <div>
           <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">{title}</h2>
-          <p className="mt-4 text-text-2">Can&apos;t find what you&apos;re looking for?</p>
-          <div className="mt-6">
-            <Button href="/contact" variant="outline">
-              Chat with us
+          <p className="mt-4 text-text-2">Still have a question? Talk to the team.</p>
+          <div className="mt-6 flex flex-wrap gap-3">
+            <Button href="/demo">Book a demo</Button>
+            <Button href="/faqs" variant="outline">
+              All FAQs
             </Button>
           </div>
         </div>
-        <FaqAccordion items={list} />
+        <FaqAccordion items={items} />
       </div>
     </Section>
   );
 }
 
-export function StoryCard({ href, company, title, stat, statLabel, industry }: { href: string; company: string; title: string; stat?: string; statLabel?: string; industry?: string }) {
+export function StoryCard({ study }: { study: CaseStudy }) {
+  const top = study.stats[0];
   return (
-    <Link
-      href={href}
-      className="group flex h-full flex-col overflow-hidden rounded-2xl bg-white ring-1 ring-line transition-shadow hover:shadow-lg"
-    >
-      <ImagePlaceholder label="Story image" ratio="aspect-[16/9]" className="rounded-none ring-0" />
+    <Link href={`/customers/${study.slug}`} className="group flex h-full flex-col overflow-hidden rounded-2xl bg-white ring-1 ring-line transition-shadow hover:shadow-lg">
+      <div className="aspect-[2/1] overflow-hidden bg-muted">
+        <img src={study.cardImage} alt={study.heroAlt} loading="lazy" className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
+      </div>
       <div className="flex flex-1 flex-col p-5">
         <div className="flex items-center justify-between gap-2">
-          <span className="text-sm font-semibold">{company}</span>
-          {industry && <span className="rounded-full bg-muted px-2.5 py-0.5 text-xs text-text-2">{industry}</span>}
+          <span className="text-sm font-semibold">{study.client}</span>
+          <span className="truncate rounded-full bg-muted px-2.5 py-0.5 text-xs text-text-2">{study.channels.slice(0, 2).join(", ")}</span>
         </div>
-        <h3 className="mt-3 text-base font-semibold leading-snug group-hover:text-brand-600">{title}</h3>
-        {stat && (
+        <h3 className="mt-3 text-base font-semibold leading-snug group-hover:text-brand-600">{study.title}</h3>
+        {top && (
           <p className="mt-auto pt-4 text-sm text-text-2">
-            <span className="text-2xl font-semibold text-text">{stat}</span> {statLabel}
+            <span className="text-2xl font-semibold text-text">{top.display}</span> {top.label}
           </p>
         )}
       </div>
@@ -379,17 +414,20 @@ export function StoryCard({ href, company, title, stat, statLabel, industry }: {
   );
 }
 
-export function StoryCarousel({ title = "Real results from customers", stories }: { title?: string; stories: { slug: string; company: string; title: string; stat: string; statLabel: string; industry: string }[] }) {
+export function StoryCarousel({ title = "Results from YourLio customers", stories }: { title?: string; stories: CaseStudy[] }) {
   return (
     <Section>
       <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <h2 className="max-w-2xl text-3xl font-semibold tracking-tight sm:text-4xl">{title}</h2>
+        <div className="max-w-2xl">
+          <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">{title}</h2>
+          <p className="mt-3 text-sm text-text-2">Published case studies with reporting periods. Individual results, not guarantees.</p>
+        </div>
         <TextLink href="/customers">See all stories</TextLink>
       </div>
       <div className="no-scrollbar -mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-2 sm:-mx-6 sm:px-6 lg:mx-0 lg:px-0">
         {stories.map((s) => (
           <div key={s.slug} className="w-[82%] shrink-0 snap-start sm:w-[45%] lg:w-[31%]">
-            <StoryCard href={`/customers/${s.slug}`} {...s} />
+            <StoryCard study={s} />
           </div>
         ))}
       </div>
@@ -400,24 +438,30 @@ export function StoryCarousel({ title = "Real results from customers", stories }
 export function Testimonials({ count = 6 }: { count?: number }) {
   return (
     <Section tone="muted">
-      <SectionHeading title="What customers say" sub="Placeholder for a short line introducing customer quotes." />
+      <SectionHeading
+        title="What teams say about YourLio"
+        sub="Summaries of merchant reviews on the Shopify App Store, not verbatim quotes. Each links to the original review."
+      />
       <div className="columns-1 gap-4 sm:columns-2 lg:columns-3 [&>*]:mb-4">
-        {Array.from({ length: count }, (_, i) => (
-          <figure key={i} className="break-inside-avoid rounded-2xl bg-white p-6 ring-1 ring-line">
-            <div className="flex gap-0.5 text-amber-400" aria-label="5 out of 5 stars">
-              {Array.from({ length: 5 }, (_, s) => (
+        {reviews.slice(0, count).map((r) => (
+          <figure key={r.reviewId} className="break-inside-avoid rounded-2xl bg-white p-6 ring-1 ring-line">
+            <div className="flex gap-0.5 text-amber-400" aria-label={`${r.rating} out of 5 stars`}>
+              {Array.from({ length: r.rating }, (_, s) => (
                 <Star key={s} className="h-4 w-4 fill-current" aria-hidden="true" />
               ))}
             </div>
-            <blockquote className="mt-4 text-sm leading-relaxed text-text">
-              &ldquo;Placeholder customer quote. {i % 2 ? ph.short : ph.medium}&rdquo;
-            </blockquote>
+            <blockquote className="mt-4 text-sm leading-relaxed text-text">{r.summary}</blockquote>
             <figcaption className="mt-5 flex items-center gap-3">
-              <span className="h-10 w-10 rounded-full bg-brand-100" aria-hidden="true" />
-              <span>
-                <span className="block text-sm font-semibold">Customer Name</span>
-                <span className="block text-xs text-text-2">Job title, Company {String(i + 1).padStart(2, "0")}</span>
+              <img src={r.photo} alt={r.person} width={40} height={40} loading="lazy" className="h-10 w-10 rounded-full object-cover" />
+              <span className="min-w-0">
+                <span className="block text-sm font-semibold">{r.person}</span>
+                <span className="block text-xs text-text-2">
+                  {r.role}, {r.brand}
+                </span>
               </span>
+              <a href={reviewUrl(r.reviewId)} target="_blank" rel="noopener" className="ml-auto text-xs font-medium text-brand-600 hover:underline">
+                Review
+              </a>
             </figcaption>
           </figure>
         ))}
@@ -431,22 +475,31 @@ export function RatingsBand() {
     <Section>
       <div className="grid items-center gap-10 lg:grid-cols-2">
         <div>
-          <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">Placeholder heading for review-site ratings</h2>
-          <p className="mt-4 text-text-2">{ph.medium}</p>
-          <div className="mt-6 flex items-center gap-2">
+          <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">Rated 5.0 by the businesses that run on it</h2>
+          <p className="mt-4 text-text-2">
+            {BRAND} is rated 5.0 on the Shopify App Store and used by 100+ brands. Every review is public, and every case study states its
+            reporting period.
+          </p>
+          <div className="mt-6 flex flex-wrap items-center gap-3">
             <div className="flex text-amber-400">
               {Array.from({ length: 5 }, (_, s) => (
                 <Star key={s} className="h-5 w-5 fill-current" aria-hidden="true" />
               ))}
             </div>
-            <span className="text-sm text-text-2">0.0 / 5 average rating (placeholder)</span>
+            <a href={SHOPIFY_REVIEWS_URL} target="_blank" rel="noopener" className="text-sm font-semibold text-brand-600 hover:underline">
+              Read the reviews on Shopify
+            </a>
           </div>
         </div>
         <div className="grid grid-cols-3 gap-3 sm:gap-4">
-          {Array.from({ length: 6 }, (_, i) => (
-            <div key={i} className="flex aspect-[4/5] flex-col items-center justify-center rounded-xl bg-muted p-3 text-center ring-1 ring-line">
-              <Icon name="Award" className="h-8 w-8 text-brand-500" />
-              <span className="mt-2 text-xs font-medium text-text-2">Badge {i + 1}</span>
+          {[
+            ["5.0", "Shopify App Store rating"],
+            ["100+", "brands use YourLio"],
+            ["16", "published case studies"],
+          ].map(([v, l]) => (
+            <div key={l} className="flex aspect-[4/5] flex-col items-center justify-center rounded-xl bg-muted p-3 text-center ring-1 ring-line">
+              <span className="text-3xl font-semibold tracking-tight text-brand-700 sm:text-4xl">{v}</span>
+              <span className="mt-2 text-xs font-medium text-text-2">{l}</span>
             </div>
           ))}
         </div>
@@ -456,24 +509,18 @@ export function RatingsBand() {
 }
 
 export function SuccessPillars() {
-  const items = [
-    { title: "Pillar one", icon: "Rocket" },
-    { title: "Pillar two", icon: "ShieldCheck" },
-    { title: "Pillar three", icon: "Award" },
-    { title: "Pillar four", icon: "HeartHandshake" },
-  ];
   return (
     <Section tone="muted">
-      <SectionHeading title={`How ${BRAND} sets you up for success`} sub={ph.heroSub} />
+      <SectionHeading title={`How ${BRAND} works for your team`} sub="What we build toward, and what you can expect from the product." />
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {items.map((it, i) => (
+        {pillars.map((it, i) => (
           <div key={it.title} className="rounded-2xl bg-white p-6 ring-1 ring-line">
             <span className="text-sm font-semibold text-brand-600">0{i + 1}</span>
             <div className="mt-4">
               <IconBadge name={it.icon} />
             </div>
             <h3 className="mt-4 text-lg font-semibold">{it.title}</h3>
-            <p className="mt-2 text-sm text-text-2">{ph.medium}</p>
+            <p className="mt-2 text-sm text-text-2">{it.text}</p>
           </div>
         ))}
       </div>
@@ -481,7 +528,13 @@ export function SuccessPillars() {
   );
 }
 
-export function CtaBand({ title = "Placeholder closing headline", sub = ph.heroSub }: { title?: string; sub?: string }) {
+export function CtaBand({
+  title = "Turn every enquiry into a booked call",
+  sub = "See YourLio answer, qualify and book on your own website and WhatsApp, with your real questions.",
+}: {
+  title?: string;
+  sub?: string;
+}) {
   return (
     <section className="bg-surface px-4 pb-16 sm:px-6 sm:pb-24 lg:px-8">
       <div className="bg-grid-dark relative mx-auto max-w-[1240px] overflow-hidden rounded-3xl bg-ink px-6 py-14 text-center text-white sm:px-12 sm:py-20">
@@ -500,18 +553,22 @@ export function CtaBand({ title = "Placeholder closing headline", sub = ph.heroS
 export function PageHero({
   eyebrow,
   title,
-  sub = ph.heroSub,
+  sub,
   icon,
   children,
   art = "mock",
+  shot,
+  photo,
   ctas,
 }: {
   eyebrow?: string;
   title: string;
-  sub?: string;
+  sub: string;
   icon?: string;
   children?: React.ReactNode;
-  art?: "mock" | "image" | "none";
+  art?: "mock" | "shot" | "photo" | "none";
+  shot?: ShotKey;
+  photo?: { src: string; alt: string };
   ctas?: React.ReactNode;
 }) {
   return (
@@ -521,32 +578,31 @@ export function PageHero({
         <div className={art === "none" ? "mx-auto max-w-3xl text-center" : "grid items-center gap-12 lg:grid-cols-2"}>
           <div className={art === "none" ? "" : "text-center lg:text-left"}>
             {eyebrow && (
-              <p className={`mb-5 inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-white/80 ring-1 ring-white/15`}>
+              <p className="mb-5 inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-white/80 ring-1 ring-white/15">
                 {icon && <Icon name={icon} className="h-3.5 w-3.5 text-brand-300" />}
                 {eyebrow}
               </p>
             )}
-            <h1 className="text-4xl font-semibold tracking-tight text-balance sm:text-5xl lg:text-6xl">{title}</h1>
+            <h1 className="text-4xl font-semibold tracking-tight text-balance sm:text-5xl lg:text-[3.4rem] lg:leading-[1.08]">{title}</h1>
             <p className="mx-auto mt-5 max-w-xl text-base text-white/70 sm:text-lg lg:mx-0">{sub}</p>
-            <div className={`mt-8 flex ${art === "none" ? "justify-center" : "justify-center lg:justify-start"}`}>
-              {ctas ?? <CtaPair />}
-            </div>
+            <div className={`mt-8 flex ${art === "none" ? "justify-center" : "justify-center lg:justify-start"}`}>{ctas ?? <CtaPair />}</div>
             {children}
           </div>
           {art === "mock" && <AppMock />}
-          {art === "image" && <ImagePlaceholder label="Hero image" dark />}
+          {art === "shot" && <ProductShot shot={shot ?? "inbox"} priority />}
+          {art === "photo" && photo && <Photo src={photo.src} alt={photo.alt} ratio="aspect-[3/2]" className="ring-white/10" />}
         </div>
       </Container>
     </section>
   );
 }
 
-/** Light hero for index pages (integrations, customers, faqs, legal). */
+/** Dark hero for index pages (integrations, customers, faqs). */
 export function SimpleHero({ title, sub, children }: { title: string; sub?: string; children?: React.ReactNode }) {
   return (
     <section className="bg-grid-dark bg-ink pt-28 pb-14 text-white sm:pt-36 sm:pb-20">
       <Container className="text-center">
-        <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">{title}</h1>
+        <h1 className="text-4xl font-semibold tracking-tight text-balance sm:text-5xl">{title}</h1>
         {sub && <p className="mx-auto mt-4 max-w-2xl text-white/70 sm:text-lg">{sub}</p>}
         {children}
       </Container>
@@ -558,12 +614,39 @@ export function Monogram({ name, size = "md" }: { name: string; size?: "md" | "l
   const hue = [...name].reduce((a, c) => a + c.charCodeAt(0), 0) % 360;
   const s = size === "lg" ? "h-16 w-16 text-2xl" : "h-11 w-11 text-base";
   return (
-    <span
-      aria-hidden="true"
-      className={`inline-flex shrink-0 items-center justify-center rounded-xl font-semibold text-white ${s}`}
-      style={{ background: `hsl(${hue} 55% 52%)` }}
-    >
+    <span aria-hidden="true" className={`inline-flex shrink-0 items-center justify-center rounded-xl font-semibold text-white ${s}`} style={{ background: `hsl(${hue} 55% 52%)` }}>
       {name.replace(/[^A-Za-z0-9]/g, "").slice(0, 2)}
     </span>
+  );
+}
+
+export function IntegrationLogo({ name, logo, size = "md" }: { name: string; logo: string | null; size?: "md" | "lg" }) {
+  if (!logo) return <Monogram name={name} size={size} />;
+  const s = size === "lg" ? "h-16 w-16 p-2.5" : "h-11 w-11 p-1.5";
+  return (
+    <span className={`inline-flex shrink-0 items-center justify-center rounded-xl bg-white ring-1 ring-line ${s}`}>
+      <img src={logo} alt="" loading="lazy" className="h-full w-full object-contain" />
+    </span>
+  );
+}
+
+export function Breadcrumbs({ items }: { items: { name: string; path: string }[] }) {
+  return (
+    <nav aria-label="Breadcrumb" className="text-sm text-white/60">
+      <ol className="flex flex-wrap items-center gap-1.5">
+        {items.map((it, i) => (
+          <li key={it.path} className="flex items-center gap-1.5">
+            {i > 0 && <span aria-hidden="true">/</span>}
+            {i < items.length - 1 ? (
+              <Link href={it.path} className="hover:text-white">
+                {it.name}
+              </Link>
+            ) : (
+              <span className="text-white/85">{it.name}</span>
+            )}
+          </li>
+        ))}
+      </ol>
+    </nav>
   );
 }

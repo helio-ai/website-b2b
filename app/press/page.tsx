@@ -1,41 +1,55 @@
+/* eslint-disable @next/next/no-img-element */
 import type { Metadata } from "next";
-import Link from "next/link";
 import { Download } from "lucide-react";
-import { CtaBand, ImagePlaceholder, Section, SectionHeading, SimpleHero } from "@/components/ui";
-import { ph } from "@/lib/content";
+import { CtaBand, Section, SectionHeading, SimpleHero } from "@/components/ui";
+import { CONTACT_EMAIL } from "@/lib/site";
+import { pageMeta } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Press",
-  description: "Placeholder description for the press page.",
-};
+export const metadata: Metadata = pageMeta({
+  title: "YourLio Press and Brand Assets | YourLio",
+  description: "YourLio logos, the company boilerplate and media contact for journalists writing about YourLio AI and YourLio for business.",
+  path: "/press",
+});
+
+const assets = [
+  { label: "Wordmark, white", src: "/brand/wordmark-white.png", bg: "bg-ink" },
+  { label: "Wordmark, graphite", src: "/brand/wordmark-graphite.png", bg: "bg-white" },
+  { label: "App icon", src: "/brand/appicon-square-512.png", bg: "bg-muted" },
+  { label: "Mark, for light backgrounds", src: "/brand/mark-light-bg.png", bg: "bg-white" },
+];
 
 export default function PressPage() {
   return (
     <>
-      <SimpleHero title="Press" sub="Placeholder line for journalists and media." />
+      <SimpleHero title="Press and brand assets" sub="Logos, a short company description and who to contact." />
       <Section>
-        <div className="grid gap-6 lg:grid-cols-3">
-          <div className="rounded-3xl bg-ink p-8 text-white lg:col-span-1">
-            <h2 className="text-2xl font-semibold">Press kit</h2>
-            <p className="mt-2 text-sm text-white/70">Placeholder: logos, product screenshots and founder photos.</p>
-            <Link href="#press-kit" className="mt-6 inline-flex h-11 items-center gap-2 rounded-lg bg-white px-4 text-sm font-medium text-ink">
-              <Download className="h-4 w-4" aria-hidden="true" /> Download press kit
-            </Link>
-            <p className="mt-8 text-sm text-white/70">Media contact</p>
-            <a href="mailto:press@example.com" className="font-medium">press@example.com</a>
+        <div className="grid gap-10 lg:grid-cols-[1fr_1.4fr]">
+          <div>
+            <h2 className="text-2xl font-semibold">About YourLio</h2>
+            <p className="mt-3 leading-relaxed text-text-2">
+              YourLio AI, formerly Helio AI, is built by HELIOAI AGENTIC SYSTEMS PRIVATE LIMITED in Bengaluru. It makes one AI agent, shared
+              inbox and CRM that answers customers on the website, WhatsApp, Instagram, Facebook, email and calls, with one memory of each
+              person. YourLio for Shopify serves 100+ ecommerce brands and is rated 5.0 on the Shopify App Store. YourLio for business serves
+              companies that sell through a call, a quote, a site visit or an appointment.
+            </p>
+            <p className="mt-6 text-sm text-text-2">Media contact</p>
+            <a href={`mailto:${CONTACT_EMAIL}`} className="font-medium text-brand-600 hover:underline">
+              {CONTACT_EMAIL}
+            </a>
           </div>
-          <div className="lg:col-span-2">
-            <SectionHeading align="left" title="In the news" />
-            <div className="grid gap-5 sm:grid-cols-2">
-              {Array.from({ length: 6 }, (_, i) => (
-                <Link key={i} href="#article" className="group rounded-2xl ring-1 ring-line hover:shadow-lg">
-                  <ImagePlaceholder label="Outlet logo" ratio="aspect-[16/7]" className="rounded-b-none ring-0" />
-                  <div className="p-5">
-                    <p className="text-xs text-text-3">Outlet name · Date</p>
-                    <h3 className="mt-2 font-semibold group-hover:text-brand-600">Placeholder press headline {i + 1}</h3>
-                    <p className="mt-2 text-sm text-text-2">{ph.short}</p>
+          <div>
+            <SectionHeading align="left" title="Logos" />
+            <div className="grid gap-4 sm:grid-cols-2">
+              {assets.map((a) => (
+                <a key={a.src} href={a.src} download className="group overflow-hidden rounded-2xl ring-1 ring-line hover:shadow-lg">
+                  <div className={`flex h-32 items-center justify-center p-6 ${a.bg}`}>
+                    <img src={a.src} alt={a.label} className="max-h-16 w-auto" />
                   </div>
-                </Link>
+                  <div className="flex items-center justify-between p-4 text-sm">
+                    <span className="font-medium">{a.label}</span>
+                    <Download className="h-4 w-4 text-text-3 group-hover:text-brand-600" aria-hidden="true" />
+                  </div>
+                </a>
               ))}
             </div>
           </div>

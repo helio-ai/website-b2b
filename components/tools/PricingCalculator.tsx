@@ -1,88 +1,100 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { inputCls } from "./ToolShell";
+import { plans, suites } from "@/lib/yourlio";
 
-// PLACEHOLDER RATES (USD). These are not real prices: replace with the
-// current official rate card before publishing.
-const markets: Record<string, { marketing: number; utility: number; authentication: number; callMin: number }> = {
-  "Market A": { marketing: 0.025, utility: 0.004, authentication: 0.004, callMin: 0.01 },
-  "Market B": { marketing: 0.06, utility: 0.02, authentication: 0.03, callMin: 0.02 },
-  "Market C": { marketing: 0.04, utility: 0.01, authentication: 0.01, callMin: 0.015 },
-  "Market D": { marketing: 0.08, utility: 0.03, authentication: 0.035, callMin: 0.03 },
-};
+const fmt = (n: number) => n.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: n < 100 ? 2 : 0 });
 
-const cats = [
-  ["marketing", "Marketing messages"],
-  ["utility", "Utility messages"],
-  ["authentication", "Authentication messages"],
-] as const;
-
+/** Estimates a monthly YourLio bill from AI conversations and suites, using the published USD plans. */
 export function PricingCalculator() {
-  const [market, setMarket] = useState("Market A");
-  const [counts, setCounts] = useState({ marketing: 1000, utility: 500, authentication: 200 });
-  const [minutes, setMinutes] = useState(100);
+  const [convos, setConvos] = useState(1000);
+  const [social, setSocial] = useState(false);
+  const [marketing, setMarketing] = useState(false);
 
-  const r = markets[market];
-  const lines = cats.map(([k, label]) => ({ label, cost: counts[k] * r[k] }));
-  const calls = minutes * r.callMin;
-  const total = lines.reduce((s, l) => s + l.cost, 0) + calls;
-  const fmt = (n: number) => n.toLocaleString("en-US", { style: "currency", currency: "USD" });
+  const options = plans.map((p) => {
+    const extra = Math.max(0, convos - p.convos);
+    return { ...p, extra, total: p.price + extra * p.overage };
+  });
+  const best = options.reduce((a, b) => (b.total < a.total ? b : a));
+  const suiteCost = (social ? suites[0].price : 0) + (marketing ? suites[1].price : 0);
 
   return (
     <div className="grid gap-6 rounded-3xl bg-white p-5 ring-1 ring-line sm:p-8 lg:grid-cols-[1.2fr_1fr]">
-      <div className="space-y-4">
+      <div className="space-y-5">
         <label className="block text-sm font-medium">
-          Recipient market
-          <select value={market} onChange={(e) => setMarket(e.target.value)} className={inputCls}>
-            {Object.keys(markets).map((m) => (
-              <option key={m}>{m}</option>
-            ))}
-          </select>
-        </label>
-        {cats.map(([k, label]) => (
-          <label key={k} className="block text-sm font-medium">
-            {label} per month
-            <input
-              type="number"
-              min={0}
-              inputMode="numeric"
-              value={counts[k]}
-              onChange={(e) => setCounts((c) => ({ ...c, [k]: Math.max(0, Number(e.target.value) || 0) }))}
-              className={inputCls}
-            />
-          </label>
-        ))}
-        <label className="block text-sm font-medium">
-          Call minutes per month
+          AI conversations per month
           <input
             type="number"
             min={0}
+            step={50}
             inputMode="numeric"
-            value={minutes}
-            onChange={(e) => setMinutes(Math.max(0, Number(e.target.value) || 0))}
+            value={convos}
+            onChange={(e) => setConvos(Math.max(0, Number(e.target.value) || 0))}
             className={inputCls}
           />
         </label>
+        <input
+          type="range"
+          min={0}
+          max={8000}
+          step={50}
+          value={Math.min(convos, 8000)}
+          onChange={(e) => setConvos(Number(e.target.value))}
+          aria-label="AI conversations per month"
+          className="w-full accent-brand-500"
+        />
+        <fieldset className="space-y-2">
+          <legend className="text-sm font-medium">Add ons</legend>
+          {[
+            [social, setSocial, suites[0]] as const,
+            [marketing, setMarketing, suites[1]] as const,
+          ].map(([on, set, s]) => (
+            <label key={s.id} className="flex items-center gap-3 rounded-lg p-2 text-sm ring-1 ring-line">
+              <input type="checkbox" checked={on} onChange={() => set(!on)} className="h-4 w-4 accent-brand-500" />
+              <span className="flex-1">{s.name}</span>
+              <span className="text-text-2">${s.price}/mo</span>
+            </label>
+          ))}
+        </fieldset>
+        <div className="overflow-x-auto rounded-xl ring-1 ring-line">
+          <table className="w-full text-left text-sm">
+            <thead className="bg-muted">
+              <tr>
+                <th scope="col" className="p-3 font-semibold">Plan</th>
+                <th scope="col" className="p-3 font-semibold">Included</th>
+                <th scope="col" className="p-3 text-right font-semibold">Monthly</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-line">
+              {options.map((o) => (
+                <tr key={o.id} className={o.id === best.id ? "bg-brand-50" : ""}>
+                  <th scope="row" className="p-3 font-medium">{o.name}</th>
+                  <td className="p-3 text-text-2">{o.convos.toLocaleString("en-US")}</td>
+                  <td className="p-3 text-right">{fmt(o.total)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
       <div className="flex flex-col rounded-2xl bg-ink p-6 text-white">
-        <p className="text-sm text-white/70">Estimated monthly cost</p>
+        <p className="text-sm text-white/70">Lowest estimated monthly cost</p>
         <p className="mt-1 text-4xl font-semibold tracking-tight" aria-live="polite">
-          {fmt(total)}
+          {fmt(best.total + suiteCost)}
         </p>
-        <dl className="mt-6 space-y-3 text-sm">
-          {lines.map((l) => (
-            <div key={l.label} className="flex justify-between gap-4 border-b border-white/10 pb-3">
-              <dt className="text-white/70">{l.label}</dt>
-              <dd>{fmt(l.cost)}</dd>
-            </div>
-          ))}
-          <div className="flex justify-between gap-4">
-            <dt className="text-white/70">Calls</dt>
-            <dd>{fmt(calls)}</dd>
-          </div>
-        </dl>
-        <p className="mt-auto pt-6 text-xs text-white/50">Placeholder rates for layout only. Replace them with the official rate card.</p>
+        <p className="mt-2 text-sm text-white/70">
+          {best.name} plan{best.extra > 0 ? `, with ${best.extra.toLocaleString("en-US")} extra conversations at ${fmt(best.overage)} each` : ""}
+          {suiteCost ? `, plus ${fmt(suiteCost)} in add ons` : ""}.
+        </p>
+        <Link href="/demo" className="mt-6 inline-flex h-11 items-center justify-center rounded-lg bg-brand-500 text-sm font-medium hover:bg-brand-600">
+          Confirm with a demo
+        </Link>
+        <p className="mt-auto pt-6 text-xs text-white/50">
+          Published USD AI Agent plans. Excludes AI CRM & Helpdesk (quoted on a call), taxes, Meta messaging fees and carrier calling charges. For
+          WhatsApp you pay Meta directly, with no YourLio markup.
+        </p>
       </div>
     </div>
   );
