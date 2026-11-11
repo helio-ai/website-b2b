@@ -1,7 +1,8 @@
 import { useCallback, useState } from 'react';
 import Layout from '../components/Layout';
 import ChatDemo from '../components/ChatDemo';
-import { Hero, Steps, WhatsAppSection, Industries, Team, Faqs } from '../components/Sections';
+import { Hero, Steps, Platform, WhatsAppSection, Industries, Team, Faqs } from '../components/Sections';
+import { CallSection } from '../components/CallDemo';
 import { useBookDemo } from '../hooks/useBookDemo';
 import { useReducedMotion } from '../hooks/useReducedMotion';
 import { ORG_SCHEMA, SOFTWARE_SCHEMA, WEBSITE_SCHEMA, pageSchema, faqSchema } from '../lib/seo';
@@ -31,10 +32,12 @@ export default function HomePage() {
     faqSchema(B2B_FAQS),
   ];
   return <Layout path="/" jsonLd={jsonLd}>
-    <Hero onCTA={onCTA} title="Turn every enquiry into a booked sales call." lead="One AI agent on your website and WhatsApp asks your qualifying questions, collects contact details and books the call. Your team sees the whole picture before they dial. No flow trees to build.">
+    <Hero onCTA={onCTA} title="Turn every enquiry into a booked sales call." lead="One AI agent across your website, calls, WhatsApp, social and email asks your qualifying questions, collects contact details and books the call. Every lead lands in one CRM, ready for your team.">
       <ChatDemo industries={B2B_INDUSTRIES} pickerIds={PICKER_IDS} industryId={industryId} autoCycle={autoCycle && !reduceMotion} onSelect={select} onFinished={next} />
     </Hero>
     <Steps />
+    <Platform />
+    <CallSection />
     <WhatsAppSection industry={industry} />
     <Industries items={B2B_INDUSTRIES} activeId={industryId} onPlay={play} title="Built for businesses that sell through a conversation" intro="If a sale starts with a question and ends with a call, a quote or a site visit, the agent fits. Play one in the demo, or open its page." />
     <Team photo={B2B_HUB.photo} />

@@ -65,7 +65,18 @@ export const SOFTWARE_SCHEMA = {
   name: 'YourLio AI',
   applicationCategory: 'BusinessApplication',
   operatingSystem: 'Web',
-  description: 'An AI agent for websites and WhatsApp that answers enquiries, asks qualifying questions, collects contact details and books sales calls, with a shared inbox for the team.',
+  description: 'An AI agent for websites, calls, WhatsApp, Instagram, Facebook and email that answers enquiries, asks qualifying questions, collects contact details and books sales calls, with a CRM that tracks every lead by stage.',
+  featureList: [
+    'AI chat agent for your website',
+    'AI voice agent for lead calls',
+    'WhatsApp Business conversations and campaigns',
+    'Instagram and Facebook comment and DM automation',
+    'Meta ads lead follow up',
+    'Email replies and follow ups',
+    'Lead qualification with your own questions',
+    'CRM with lead stages and a shared inbox',
+    'HubSpot and Zoho integrations',
+  ],
   publisher: { '@id': ORG_ID },
 };
 
@@ -115,7 +126,7 @@ export function getLlmDocuments() {
   const pages = B2B_INDUSTRIES.map((i) => `- [${B2B_PAGES[i.id].title}](${SITE_URL}/industries/${i.slug}): ${B2B_PAGES[i.id].description}`).join('\n');
   const brief = `# YourLio for business
 
-> YourLio is an AI agent for a business's website and WhatsApp. It answers enquiries, asks the business's qualifying questions with tap options, collects contact details in the chat and books the sales call. Website chat and WhatsApp share one memory of each lead, and every conversation lands in a shared inbox where the team can take over.
+> YourLio is an AI agent that qualifies leads for a business across its website chat, AI phone calls, WhatsApp, Instagram and Facebook, Meta ads and email. It answers enquiries, asks the business's qualifying questions, collects contact details and books the sales call. Every channel shares one memory of each lead, and every lead lands in a built in CRM with stages from new to booked, where the team can take over. It syncs with HubSpot, Zoho and other tools the team already uses.
 
 This site (${SITE_URL}) covers businesses that sell through a call, a quote or a site visit. YourLio for Shopify brands lives at ${MAIN_SITE_URL}. YourLio is developed by HELIOAI AGENTIC SYSTEMS PRIVATE LIMITED.
 
