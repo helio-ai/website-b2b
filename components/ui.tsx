@@ -124,11 +124,13 @@ export function TextLink({ href, children, dark = false }: { href: string; child
 /* Product visuals                                                      */
 /* ------------------------------------------------------------------ */
 
-export type ShotKey = "inbox" | "helpdesk" | "channels" | "comment-to-dm" | "journeys" | "profiles" | "agent" | "results";
+export type ShotKey = "inbox" | "inbox-dark" | "helpdesk" | "helpdesk-dark" | "channels" | "comment-to-dm" | "journeys" | "profiles" | "agent" | "results";
 
 const SHOTS: Record<ShotKey, { src: string; srcSet?: string; w: number; h: number; alt: string }> = {
   inbox: { src: "/product-creatives/yourlio-shopify-crm-shared-inbox-light-1600.webp", w: 1600, h: 816, alt: "YourLio shared inbox with every channel and the customer record beside each conversation" },
   helpdesk: { src: "/product-creatives/yourlio-shopify-ai-helpdesk-light-1600.webp", w: 1600, h: 812, alt: "YourLio AI helpdesk with tickets, assignments and an AI summary" },
+  "inbox-dark": { src: "/product-creatives/yourlio-shopify-crm-shared-inbox-dark-1600.webp", w: 1600, h: 813, alt: "YourLio shared inbox in dark mode, with every channel and the customer profile beside each conversation" },
+  "helpdesk-dark": { src: "/product-creatives/yourlio-shopify-ai-helpdesk-dark-1600.webp", w: 1600, h: 817, alt: "YourLio AI helpdesk in dark mode, with tickets, assignments and an AI summary" },
   channels: { src: "/compare/every-channel.webp", srcSet: "/compare/every-channel.webp 1200w, /compare/every-channel@2x.webp 2400w", w: 2400, h: 1350, alt: "Website chat, WhatsApp, Instagram, Facebook and email conversations in one YourLio view" },
   "comment-to-dm": { src: "/compare/comment-to-dm.webp", srcSet: "/compare/comment-to-dm.webp 1200w, /compare/comment-to-dm@2x.webp 2400w", w: 2400, h: 1350, alt: "An Instagram comment answered with a private DM by the YourLio agent" },
   journeys: { src: "/compare/journeys.webp", srcSet: "/compare/journeys.webp 1200w, /compare/journeys@2x.webp 2400w", w: 2400, h: 1350, alt: "A YourLio campaign journey with WhatsApp and email steps" },
@@ -139,8 +141,9 @@ const SHOTS: Record<ShotKey, { src: string; srcSet?: string; w: number; h: numbe
 
 export function ProductShot({ shot, className = "", priority = false }: { shot: ShotKey; className?: string; priority?: boolean }) {
   const s = SHOTS[shot] ?? SHOTS.inbox;
+  const dark = shot.endsWith("-dark");
   return (
-    <div className={`overflow-hidden rounded-2xl bg-white shadow-2xl ring-1 ring-black/5 ${className}`}>
+    <div className={`overflow-hidden rounded-2xl shadow-2xl ring-1 ${dark ? "bg-ink-2 ring-white/10" : "bg-white ring-black/5"} ${className}`}>
       <img
         src={s.src}
         srcSet={s.srcSet}
@@ -501,6 +504,9 @@ export function CtaBand({
   );
 }
 
+/** On dark backgrounds, show the dark mode screenshot where one exists. */
+const darkVariant = (k: ShotKey): ShotKey => (k === "inbox" ? "inbox-dark" : k === "helpdesk" ? "helpdesk-dark" : k);
+
 /** Dark hero used across product, industry and comparison pages. */
 export function PageHero({
   eyebrow,
@@ -540,8 +546,8 @@ export function PageHero({
             <div className={`mt-8 flex ${art === "none" ? "justify-center" : "justify-center lg:justify-start"}`}>{ctas ?? <CtaPair />}</div>
             {children}
           </div>
-          {art === "mock" && <ProductShot shot="inbox" priority />}
-          {art === "shot" && <ProductShot shot={shot ?? "inbox"} priority />}
+          {art === "mock" && <ProductShot shot="inbox-dark" priority />}
+          {art === "shot" && <ProductShot shot={darkVariant(shot ?? "inbox")} priority />}
           {art === "photo" && photo && <Photo src={photo.src} alt={photo.alt} ratio="aspect-[3/2]" className="ring-white/10" />}
         </div>
       </Container>
