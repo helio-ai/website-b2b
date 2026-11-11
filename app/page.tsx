@@ -60,7 +60,7 @@ export default function Home() {
             Rated 5.0 on the Shopify App Store, used by 100+ brands
           </a>
           <div className="mx-auto mt-14 max-w-5xl">
-            <ProductShot shot="inbox-dark" priority />
+            <ProductShot shot="inbox-dark" priority sizes="(min-width: 1100px) 1024px, 100vw" />
           </div>
         </Container>
       </section>

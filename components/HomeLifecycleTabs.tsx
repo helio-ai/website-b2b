@@ -94,7 +94,16 @@ export function HomeLifecycleTabs({ stages }: { stages?: { capture: string; conv
           </Link>
         </div>
         <div className="overflow-hidden rounded-2xl ring-1 ring-line">
-          <img src={tab.img} alt={tab.alt} width={1200} height={675} loading="lazy" className="h-auto w-full" />
+          <img
+            src={tab.img.replace(".webp", "@2x.webp")}
+            srcSet={`${tab.img} 1200w, ${tab.img.replace(".webp", "@2x.webp")} 2400w`}
+            sizes="(min-width: 1024px) 560px, 100vw"
+            alt={tab.alt}
+            width={2400}
+            height={1350}
+            loading="lazy"
+            className="h-auto w-full"
+          />
         </div>
       </div>
     </div>

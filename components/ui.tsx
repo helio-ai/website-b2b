@@ -126,20 +126,48 @@ export function TextLink({ href, children, dark = false }: { href: string; child
 
 export type ShotKey = "inbox" | "inbox-dark" | "helpdesk" | "helpdesk-dark" | "channels" | "comment-to-dm" | "journeys" | "profiles" | "agent" | "results";
 
-const SHOTS: Record<ShotKey, { src: string; srcSet?: string; w: number; h: number; alt: string }> = {
-  inbox: { src: "/product-creatives/yourlio-shopify-crm-shared-inbox-light-1600.webp", w: 1600, h: 816, alt: "YourLio shared inbox with every channel and the customer record beside each conversation" },
-  helpdesk: { src: "/product-creatives/yourlio-shopify-ai-helpdesk-light-1600.webp", w: 1600, h: 812, alt: "YourLio AI helpdesk with tickets, assignments and an AI summary" },
-  "inbox-dark": { src: "/product-creatives/yourlio-shopify-crm-shared-inbox-dark-1600.webp", w: 1600, h: 813, alt: "YourLio shared inbox in dark mode, with every channel and the customer profile beside each conversation" },
-  "helpdesk-dark": { src: "/product-creatives/yourlio-shopify-ai-helpdesk-dark-1600.webp", w: 1600, h: 817, alt: "YourLio AI helpdesk in dark mode, with tickets, assignments and an AI summary" },
-  channels: { src: "/compare/every-channel.webp", srcSet: "/compare/every-channel.webp 1200w, /compare/every-channel@2x.webp 2400w", w: 2400, h: 1350, alt: "Website chat, WhatsApp, Instagram, Facebook and email conversations in one YourLio view" },
-  "comment-to-dm": { src: "/compare/comment-to-dm.webp", srcSet: "/compare/comment-to-dm.webp 1200w, /compare/comment-to-dm@2x.webp 2400w", w: 2400, h: 1350, alt: "An Instagram comment answered with a private DM by the YourLio agent" },
-  journeys: { src: "/compare/journeys.webp", srcSet: "/compare/journeys.webp 1200w, /compare/journeys@2x.webp 2400w", w: 2400, h: 1350, alt: "A YourLio campaign journey with WhatsApp and email steps" },
-  profiles: { src: "/compare/shopper-profiles.webp", srcSet: "/compare/shopper-profiles.webp 1200w, /compare/shopper-profiles@2x.webp 2400w", w: 2400, h: 1482, alt: "A YourLio customer profile with the memory of every conversation" },
-  agent: { src: "/compare/agent-is-product.webp", srcSet: "/compare/agent-is-product.webp 1200w, /compare/agent-is-product@2x.webp 2400w", w: 2400, h: 1350, alt: "The YourLio AI agent answering a question in chat" },
-  results: { src: "/compare/what-it-earned.webp", srcSet: "/compare/what-it-earned.webp 1200w, /compare/what-it-earned@2x.webp 2400w", w: 2400, h: 1350, alt: "YourLio dashboard showing conversations and the results they produced" },
+// Each product screenshot ships in three widths (800, 1600 and 3840 for the
+// creatives, 1200 and 2400 for the comparison shots) so high density screens
+// get a sharp image and phones a light one.
+const creative = (name: string, h: number, alt: string) => ({
+  src: `/product-creatives/${name}-1600.webp`,
+  srcSet: `/product-creatives/${name}-800.webp 800w, /product-creatives/${name}-1600.webp 1600w, /product-creatives/${name}-4k.webp 3840w`,
+  w: 3840,
+  h,
+  alt,
+});
+const compare = (name: string, h: number, alt: string) => ({
+  src: `/compare/${name}@2x.webp`,
+  srcSet: `/compare/${name}.webp 1200w, /compare/${name}@2x.webp 2400w`,
+  w: 2400,
+  h,
+  alt,
+});
+
+const SHOTS: Record<ShotKey, { src: string; srcSet: string; w: number; h: number; alt: string }> = {
+  inbox: creative("yourlio-shopify-crm-shared-inbox-light", 1958, "YourLio shared inbox with every channel and the customer record beside each conversation"),
+  "inbox-dark": creative("yourlio-shopify-crm-shared-inbox-dark", 1951, "YourLio shared inbox in dark mode, with every channel and the customer profile beside each conversation"),
+  helpdesk: creative("yourlio-shopify-ai-helpdesk-light", 1949, "YourLio AI helpdesk with tickets, assignments and an AI summary"),
+  "helpdesk-dark": creative("yourlio-shopify-ai-helpdesk-dark", 1961, "YourLio AI helpdesk in dark mode, with tickets, assignments and an AI summary"),
+  channels: compare("every-channel", 1350, "Website chat, WhatsApp, Instagram, Facebook and email conversations in one YourLio view"),
+  "comment-to-dm": compare("comment-to-dm", 1350, "An Instagram comment answered with a private DM by the YourLio agent"),
+  journeys: compare("journeys", 1350, "A YourLio campaign journey with WhatsApp and email steps"),
+  profiles: compare("shopper-profiles", 1482, "A YourLio customer profile with the memory of every conversation"),
+  agent: compare("agent-is-product", 1350, "The YourLio AI agent answering a question in chat"),
+  results: compare("what-it-earned", 1350, "YourLio dashboard showing conversations and the results they produced"),
 };
 
-export function ProductShot({ shot, className = "", priority = false }: { shot: ShotKey; className?: string; priority?: boolean }) {
+export function ProductShot({
+  shot,
+  className = "",
+  priority = false,
+  sizes = "(min-width: 1024px) 600px, 100vw",
+}: {
+  shot: ShotKey;
+  className?: string;
+  priority?: boolean;
+  sizes?: string;
+}) {
   const s = SHOTS[shot] ?? SHOTS.inbox;
   const dark = shot.endsWith("-dark");
   return (
@@ -147,11 +175,12 @@ export function ProductShot({ shot, className = "", priority = false }: { shot: 
       <img
         src={s.src}
         srcSet={s.srcSet}
-        sizes="(min-width: 1024px) 600px, 100vw"
+        sizes={sizes}
         width={s.w}
         height={s.h}
         alt={s.alt}
         loading={priority ? "eager" : "lazy"}
+        fetchPriority={priority ? "high" : "auto"}
         decoding="async"
         className="h-auto w-full"
       />
