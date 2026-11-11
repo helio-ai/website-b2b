@@ -311,21 +311,29 @@ export function ProofStats({ dark = false }: { dark?: boolean }) {
 }
 
 export function LogoStrip({ dark = false, label }: { dark?: boolean; label?: string }) {
+  const tone = dark
+    ? "brightness-0 invert opacity-60 group-hover/logo:opacity-100"
+    : "grayscale opacity-60 group-hover/logo:grayscale-0 group-hover/logo:opacity-100";
   return (
     <div>
-      {label && <p className={`mb-6 text-center text-sm ${dark ? "text-white/60" : "text-text-2"}`}>{label}</p>}
-      <div className="relative overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
-        <div className="animate-marquee flex w-max items-center gap-4">
+      {label && <p className={`mb-8 text-center text-sm font-medium ${dark ? "text-white/60" : "text-text-2"}`}>{label}</p>}
+      <div className="relative overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_12%,black_88%,transparent)]">
+        <ul className="animate-marquee flex w-max items-center gap-14 py-2 hover:[animation-play-state:paused] sm:gap-20" aria-label="YourLio customers">
           {[...customerLogos, ...customerLogos].map((l, i) => (
-            <div
-              key={i}
-              aria-hidden={i >= customerLogos.length}
-              className={`flex h-16 w-40 shrink-0 items-center justify-center rounded-xl px-5 ${dark ? "bg-white" : "bg-white ring-1 ring-line"}`}
-            >
-              <img src={l.src} alt={i < customerLogos.length ? l.name : ""} loading="lazy" className="max-h-9 w-auto max-w-full object-contain" />
-            </div>
+            <li key={i} aria-hidden={i >= customerLogos.length} className="group/logo flex h-12 shrink-0 items-center">
+              <img
+                src={l.src}
+                alt={i < customerLogos.length ? `${l.name} logo` : ""}
+                width={l.width}
+                height={l.height}
+                loading="lazy"
+                decoding="async"
+                style={{ width: l.width, height: l.height }}
+                className={`object-contain transition duration-300 ${tone}`}
+              />
+            </li>
           ))}
-        </div>
+        </ul>
       </div>
     </div>
   );

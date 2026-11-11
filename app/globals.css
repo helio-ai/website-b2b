@@ -31,7 +31,7 @@
   --color-text-2: #5c5c63;
   --color-text-3: #8e8e93;
 
-  --animate-marquee: marquee 40s linear infinite;
+  --animate-marquee: marquee 70s linear infinite;
   @keyframes marquee {
     from { transform: translateX(0); }
     to { transform: translateX(-50%); }

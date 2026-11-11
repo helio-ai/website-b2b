@@ -75,22 +75,46 @@ export const team = [
 /* Customer logos (yourlio.com, real customers)                         */
 /* ------------------------------------------------------------------ */
 
-export const customerLogos = [
-  ["sugar_cosmetics_yourlio.webp", "SUGAR Cosmetics"],
-  ["dot_and_key_yourlio.svg", "Dot & Key"],
-  ["baidyanath_yourlio.webp", "Baidyanath"],
-  ["sri_sri_tattva_yourlio.webp", "Sri Sri Tattva"],
-  ["soulflower_yourlio.webp", "Soulflower"],
-  ["deodap_yourlio.webp", "DeoDap"],
-  ["dr_ortho_yourlio.webp", "Dr. Ortho"],
-  ["blue_tea_yourlio.webp", "Blue Tea"],
-  ["slurrp_farm_yourlio.webp", "Slurrp Farm"],
-  ["sylvi_yourlio.webp", "Sylvi"],
-  ["blue_nectar_yourlio.webp", "Blue Nectar"],
-  ["north_sole_yourlio.webp", "North Sole"],
-  ["fiona_diamonds_yourlio.webp", "Fiona Diamonds"],
-  ["luxmi_estates_yourlio.webp", "Luxmi Estates"],
-].map(([file, name]) => ({ src: `/logos/${file}`, name }));
+// Same list, files and trimmed sizes as the yourlio.com logo wall
+// (website-v2 src/data/brand-logos.js). w and h are the trimmed file size.
+const LOGOS: [string, string, number, number][] = [
+  ["Sugar Cosmetics", "sugar_cosmetics_yourlio.webp", 392, 126],
+  ["Dot & Key", "dot_and_key_yourlio.svg", 278, 65],
+  ["Baidyanath", "baidyanath_yourlio.webp", 212, 41],
+  ["Sri Sri Tattva", "sri_sri_tattva_yourlio.webp", 195, 101],
+  ["Soulflower", "soulflower_yourlio.webp", 428, 123],
+  ["DeoDap", "deodap_yourlio.webp", 153, 43],
+  ["Dr. Ortho", "dr_ortho_yourlio.webp", 273, 126],
+  ["Sylvi", "sylvi_yourlio.webp", 121, 126],
+  ["Auravedic", "auravedic_yourlio.webp", 484, 126],
+  ["Majestic Pure", "majestic_pure_yourlio.webp", 314, 89],
+  ["Slurrp Farm", "slurrp_farm_yourlio.webp", 148, 126],
+  ["Blue Tea", "blue_tea_yourlio.webp", 265, 68],
+  ["ZeroHarm", "zeroharm_yourlio.webp", 268, 71],
+  ["Ripped Up Nutrition", "ripped_up_nutrition_yourlio.webp", 310, 68],
+  ["Sesa", "sesa_yourlio.webp", 320, 126],
+  ["Herbtantra", "herbtantra_yourlio.webp", 117, 126],
+  ["Sarin Skin", "sarin_skin_yourlio.webp", 138, 57],
+  ["Blue Nectar", "blue_nectar_yourlio.webp", 158, 126],
+  ["Nourish You", "nourish_you_yourlio.webp", 355, 126],
+  ["Sova Health", "sova_health_yourlio.webp", 163, 73],
+  ["Fiona Diamonds", "fiona_diamonds_yourlio.webp", 140, 53],
+  ["GlamVeda", "glamveda_yourlio.webp", 958, 126],
+  ["Longway", "longway_yourlio.webp", 610, 126],
+  ["Bubble Me", "bubble_me_yourlio.webp", 156, 126],
+  ["Ashba Botanics", "ashba_botanics_yourlio.webp", 134, 56],
+  ["Ugees", "ugees_yourlio.webp", 100, 76],
+];
+
+/**
+ * Display size per logo so every mark carries about the same visual weight:
+ * wide wordmarks get shorter, square marks get taller, within limits.
+ */
+export const customerLogos = LOGOS.map(([name, file, w, h]) => {
+  const ratio = w / h;
+  const height = Math.round(Math.min(46, Math.max(22, Math.sqrt(5200 / ratio))));
+  return { name, src: `/logos/${file}`, width: Math.round(height * ratio), height };
+});
 
 /* ------------------------------------------------------------------ */
 /* Pricing (USD, from yourlio.com/pricing, checked 2026-10)             */
