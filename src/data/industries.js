@@ -268,6 +268,43 @@ export const B2B_INDUSTRIES = [
   },
 ];
 
+/* The platform: every way a lead can reach the business, and the one CRM
+   they all land in. Listed by the YourLio team on 2026-11-11 as the B2B
+   features to highlight. AI calls, Meta ads, CRM lead stages and the Zoho
+   sync are not described on yourlio.com yet, so their wording stays general
+   until the product team confirms the details. */
+export const B2B_CHANNELS = [
+  { id: 'web', title: 'Chat agent on your website', text: 'Answers enquiries, asks your qualifying questions and books the call, day or night.' },
+  { id: 'call', title: 'AI calls', text: 'An AI voice agent talks to leads on the phone and qualifies them the same way it does in chat.' },
+  { id: 'whatsapp', title: 'WhatsApp', text: 'Answers enquiries, follows up and sends campaigns from your WhatsApp Business number.' },
+  { id: 'social', title: 'Instagram and Facebook', text: 'Turns comments and DMs into qualified conversations, automatically.' },
+  { id: 'ads', title: 'Meta ads', text: 'Leads from your Facebook and Instagram ads go straight into a conversation with the agent.' },
+  { id: 'email', title: 'Email', text: 'Replies and follows up by email with the full history of every lead.' },
+];
+
+export const B2B_PIPELINE = {
+  stages: [
+    { id: 'new', label: 'New', leads: [
+      { company: 'Lumen Freight', need: 'Demo request', source: 'Meta ad' },
+      { company: 'Oakridge Clinics', need: 'Website and SEO', source: 'Instagram' },
+    ] },
+    { id: 'qualifying', label: 'Qualifying', leads: [
+      { company: 'Harbor Foods', need: 'Bulk quote', source: 'WhatsApp' },
+    ] },
+    { id: 'qualified', label: 'Qualified', leads: [
+      { company: 'Brightline Legal', need: 'Managed IT', source: 'AI call' },
+    ] },
+    { id: 'booked', label: 'Call booked', leads: [
+      { company: 'Northwind Offices', need: 'CCTV install', source: 'Website chat', when: 'Wed, 2:00 pm' },
+    ] },
+  ],
+  points: [
+    'Every answer from every channel is saved on the lead, so nobody asks twice.',
+    'Leads move through stages your team can see and change, from new to booked.',
+    'Syncs with HubSpot, Zoho and the other tools you already use.',
+  ],
+};
+
 export const B2B_STEPS = [
   { id: 'answer', title: 'Answer every enquiry', text: 'Replies to visitors in seconds, day or night, in the language they write in.' },
   { id: 'qualify', title: 'Ask your questions', text: 'Asks what your sales team needs to know, with tap options that answer in one tap.' },
@@ -297,6 +334,14 @@ export const B2B_FAQS = [
   {
     q: 'Does it work on WhatsApp too?',
     a: 'Yes. Connect your WhatsApp Business number and the same agent answers enquiries there, with the same memory of each lead. You can also send WhatsApp campaigns and let the agent handle the replies.',
+  },
+  {
+    q: 'What does YourLio include for B2B teams?',
+    a: 'A chat agent for your website, AI calls, WhatsApp, Instagram and Facebook automation, leads from Meta ads and email, all qualified by one AI agent. Every lead lands in one CRM with stages, which syncs with HubSpot and Zoho.',
+  },
+  {
+    q: 'Does YourLio include a CRM?',
+    a: 'Yes. Every lead from chat, calls, WhatsApp, social, ads and email lands in one CRM with their answers and the full conversation, and your team moves it through stages from new to booked.',
   },
   {
     q: 'Do I need to build chatbot or WhatsApp flows?',

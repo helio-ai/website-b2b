@@ -1,7 +1,8 @@
 import { useParams } from 'react-router-dom';
 import Layout from '../components/Layout';
 import ChatDemo from '../components/ChatDemo';
-import { Hero, Steps, WhatsAppSection, Industries, Team, Faqs } from '../components/Sections';
+import { Hero, Steps, Platform, WhatsAppSection, Industries, Team, Faqs } from '../components/Sections';
+import { CallSection } from '../components/CallDemo';
 import NotFoundPage from './NotFoundPage';
 import { useBookDemo } from '../hooks/useBookDemo';
 import { ORG_SCHEMA, SOFTWARE_SCHEMA, WEBSITE_SCHEMA, pageSchema, breadcrumbSchema, faqSchema } from '../lib/seo';
@@ -23,6 +24,8 @@ function IndustryContent({ page }) {
       <ChatDemo industries={[industry]} industryId={industry.id} autoCycle={false} loop onSelect={noop} onFinished={noop} />
     </Hero>
     <Steps />
+    <Platform />
+    <CallSection />
     <WhatsAppSection industry={industry} />
     <Industries items={B2B_INDUSTRIES.filter(item => item.group === industry.group && item.id !== industry.id)} title="Also built for these businesses" intro="The same agent qualifies leads for other businesses that sell through a call, a quote or a site visit." />
     <Team photo={page.photo} />

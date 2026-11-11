@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
-import { Check, X, Inbox, Handshake, Languages, Plug, Play, Plus } from 'lucide-react';
-import { B2B_STEPS, B2B_SWITCH } from '../data/industries';
+import { Check, X, Inbox, Handshake, Languages, Plug, Play, Plus, MessagesSquare, PhoneCall, AtSign, Megaphone, Mail, RefreshCw } from 'lucide-react';
+import { B2B_STEPS, B2B_SWITCH, B2B_CHANNELS, B2B_PIPELINE } from '../data/industries';
 import { MAIN_LINKS } from '../lib/site';
 
 /* The sections every page is built from, in one order, so the home page and
@@ -38,6 +38,41 @@ export function Steps() {
       <span className="b2b-steps-node" aria-hidden="true">{i + 1}</span>
       <h3>{step.title}</h3><p>{step.text}</p>
     </li>)}</ol>
+  </section>;
+}
+
+const CHANNEL_ICONS = { web: MessagesSquare, call: PhoneCall, social: AtSign, ads: Megaphone, email: Mail };
+
+function ChannelIcon({ id }) {
+  if (id === 'whatsapp') return <span className="b2b-ch-icon" data-ch="whatsapp"><WhatsAppIcon size={18} /></span>;
+  const Icon = CHANNEL_ICONS[id];
+  return <span className="b2b-ch-icon" data-ch={id}><Icon size={18} aria-hidden="true" /></span>;
+}
+
+/* Every way a lead arrives, and the one CRM they all land in. The board is a
+   sample: four stages with leads from different channels, so a visitor sees
+   chat, calls, WhatsApp, social and ads feeding one pipeline. */
+export function Platform() {
+  return <section id="platform" className="b2b-section b2b-wrap" aria-labelledby="b2b-platform-title">
+    <div className="b2b-heading"><h2 id="b2b-platform-title">Every channel and every lead, in YourLio</h2><p>Leads reach you on your website, by phone, on WhatsApp, Instagram and Facebook, from your ads and by email. One AI agent qualifies them all, and one CRM keeps them together.</p></div>
+    <div className="b2b-platform">
+      <ul className="b2b-channels">{B2B_CHANNELS.map(ch => <li key={ch.id}>
+        <ChannelIcon id={ch.id} />
+        <div><h3>{ch.title}</h3><p>{ch.text}</p></div>
+      </li>)}</ul>
+      <div className="b2b-crm">
+        <div className="b2b-crm-head"><strong>Lead pipeline</strong><span>Sample leads</span></div>
+        <div className="b2b-board" role="list" aria-label="Sample CRM pipeline with lead stages">{B2B_PIPELINE.stages.map(stage => <div key={stage.id} className="b2b-col" role="listitem" data-stage={stage.id}>
+          <p className="b2b-col-label"><i aria-hidden="true" />{stage.label}<span>{stage.leads.length}</span></p>
+          {stage.leads.map(lead => <div key={lead.company} className="b2b-lead">
+            <strong>{lead.company}</strong>
+            <small>{lead.need}</small>
+            <span className="b2b-lead-meta"><em>{lead.source}</em>{lead.when && <b>{lead.when}</b>}</span>
+          </div>)}
+        </div>)}</div>
+        <ul className="b2b-crm-points">{B2B_PIPELINE.points.map((point, i) => <li key={point}>{i === B2B_PIPELINE.points.length - 1 ? <RefreshCw size={15} aria-hidden="true" /> : <Check size={15} aria-hidden="true" />}{point}</li>)}</ul>
+      </div>
+    </div>
   </section>;
 }
 
@@ -100,7 +135,7 @@ const TEAM_POINTS = [
   { Icon: Inbox, title: 'One place for every lead', text: 'Contact details, answers and the full chat land in the shared inbox.' },
   { Icon: Handshake, title: 'Step in at any point', text: 'A rep can take over a live conversation, and visitors can ask for an expert.' },
   { Icon: Languages, title: 'Their language, not yours', text: 'Visitors write in their own language and get replies in it.' },
-  { Icon: Plug, title: 'Fits your stack', text: 'Connects with HubSpot and the other tools you already use.', link: { href: MAIN_LINKS.integrations, label: 'See integrations' } },
+  { Icon: Plug, title: 'Fits your stack', text: 'Connects with HubSpot, Zoho and the other tools you already use.', link: { href: MAIN_LINKS.integrations, label: 'See integrations' } },
 ];
 
 export function Team({ photo }) {
