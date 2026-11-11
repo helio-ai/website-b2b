@@ -1,48 +1,58 @@
-# Website template
+# YourLio for business
 
-A Next.js 16 + Tailwind CSS 4 marketing site: about 270 routes with a mega-menu header, a mobile drawer, a footer and responsive layouts. Every piece of copy, image and logo is a placeholder for you to replace.
+The landing page at **business.yourlio.com**: an AI agent, shared inbox and CRM for businesses that sell through a conversation (a call, a quote, a site visit or an appointment). Next.js 16, Tailwind CSS 4, statically prerendered.
+
+The site is **one page**. Company, blog, comparison, case study, contact and legal pages live on [yourlio.com](https://yourlio.com); every other URL on this domain redirects to a section of the landing page or to yourlio.com (see `next.config.ts`).
 
 ## Run it
 
 ```bash
 npm install
-npm run dev
+npm run dev      # http://localhost:3000
+npm run build    # prerender to .next
+npm run lint
 ```
 
-Open http://localhost:3000. `npm run build` prerenders every page as static HTML.
+Pushing `feature/nextjs-site` deploys to production on Vercel (project `website-b2b`).
 
-## Where to edit
+## Structure
 
-| What | File |
+```
+app/
+  page.tsx            the landing page: a list of sections, top to bottom
+  layout.tsx          metadata, header, footer, site-wide JSON-LD
+  sitemap.ts, robots.ts, not-found.tsx
+components/
+  ui.tsx              Container, Section, SectionHeading, Button, CtaPair, ProductShot
+  Icon.tsx            lucide icon by name
+  layout/             Header (jump links), Footer, Logo
+  sections/           one file per page section (Hero, ProductAreas, Industries, Pricing, Faq, Demo...)
+lib/
+  site.ts             URLs, navigation and footer links
+  landing.ts          which features each product section shows, and their video or screenshot
+  shots.ts            product screenshots (800, 1600 and 4K widths)
+  seo.tsx             schema.org JSON-LD
+  copy/               page copy: features.ts, industries.ts
+  yourlio/            YourLio facts: plans, FAQs, comparisons, case study cards, reviews, integrations, logos
+public/               brand, logos, product videos and screenshots, review photos, llms.txt
+```
+
+## Editing
+
+| To change | Edit |
 | --- | --- |
-| Brand name, header menus, footer links | `lib/site.ts` |
-| Route data: product pages, industries, integrations, comparisons, customer stories, FAQs, legal pages | `lib/content.ts` |
-| Colours, font and other design tokens | `app/globals.css` (`@theme` block) |
-| Logo | `components/Logo.tsx` |
-| Shared sections (hero, feature grid, FAQ, CTA, story cards…) | `components/ui.tsx` |
-| Header and mobile menu | `components/Header.tsx` |
-| Footer | `components/Footer.tsx` |
+| A feature's text | `lib/copy/features.ts` |
+| Which features a section shows, or their video | `lib/landing.ts` |
+| An industry's sample chat | `lib/copy/industries.ts` |
+| Prices, FAQs, comparisons, steps | `lib/yourlio/index.ts` |
+| Case study cards | `lib/yourlio/case-studies.ts` (full stories stay on yourlio.com) |
+| Navigation and footer links | `lib/site.ts` |
+| Colours (YourLio purple) and fonts | `app/globals.css` |
+| Section order | `app/page.tsx` |
 
-## Route map
+## Content rules
 
-| Route | Source |
-| --- | --- |
-| `/` | `app/page.tsx` |
-| `/pricing`, `/about`, `/careers`, `/contact`, `/demo`, `/press`, `/reseller`, `/referral`, `/partner-directory` | own folder in `app/` |
-| `/whatsapp-link-generator`, `/whatsapp-qr-code-generator`, `/whatsapp-pricing-calculator` | working tools in `components/tools/` |
-| Product, solution, WhatsApp, platform, partner story and legal pages (`/team-inbox`, `/ai-agents`, `/privacy-policy`, …) | `app/[slug]/page.tsx`, driven by `featurePages` and `legalPages` |
-| `/industry/[slug]` (21) | `app/industry/[slug]/page.tsx` |
-| `/integrations` + `/integrations/[slug]` (45) | search and filters in `components/IntegrationsBrowser.tsx` |
-| `/customers` + `/customers/[slug]` (49) | industry filter in `components/CustomersBrowser.tsx` |
-| `/faqs` + `/faqs/[slug]` (89) | `app/faqs/` |
-| `/alternatives` + `/alternatives/[slug]` (5) | `app/alternatives/` |
-| `/blog`, `/help`, `/video-tutorials` | "coming soon" stubs, so nav links don't 404 |
-
-To add a page, add an entry to the matching list in `lib/content.ts`.
-
-## Still to wire up
-
-- Forms (`components/LeadForm.tsx`) only show a success message. Connect them to your CRM or form backend.
-- Login and sign-up links point to `#login` and `#signup` (`lib/site.ts`).
-- Prices and rates in the pricing page, calling rate table and pricing calculator are placeholders.
-- The language switcher is UI only. Translated routes aren't built.
+- Only claim what YourLio does. No invented results, certifications, customers or setup times.
+- Figures come from published case studies, each with its reporting period.
+- Review cards are summaries of Shopify App Store reviews and link to the originals.
+- Sample leads in demos use made-up companies and the reserved `example.com` domain.

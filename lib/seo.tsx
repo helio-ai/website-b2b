@@ -1,34 +1,10 @@
-// SEO, AEO and GEO helpers: page metadata with canonical URLs and share
-// cards, plus schema.org JSON-LD so search and answer engines read each page
-// as facts about YourLio for business.
-import type { Metadata } from "next";
+// Structured data (schema.org JSON-LD) so search and answer engines read the
+// page as facts about YourLio for business. Page metadata is in app/layout.tsx.
 import { BRAND, CONTACT_EMAIL, MAIN_SITE, SITE_URL } from "./site";
 
 export const DEFAULT_OG = "/og-card.jpg";
 
-export function pageMeta({
-  title,
-  description,
-  path,
-  image = DEFAULT_OG,
-  type = "website",
-}: {
-  title: string;
-  description: string;
-  path: string;
-  image?: string;
-  type?: "website" | "article";
-}): Metadata {
-  return {
-    title: { absolute: title },
-    description,
-    alternates: { canonical: path },
-    openGraph: { title, description, url: path, siteName: `${BRAND} for business`, type, images: [{ url: image }] },
-    twitter: { card: "summary_large_image", title, description, images: [image] },
-  };
-}
-
-export const ORG_ID = `${MAIN_SITE}/#organization`;
+const ORG_ID = `${MAIN_SITE}/#organization`;
 
 export const orgSchema = {
   "@type": "Organization",
@@ -74,11 +50,6 @@ export const faqSchema = (items: { q: string; a: string }[]) => ({
     name: f.q,
     acceptedAnswer: { "@type": "Answer", text: f.a },
   })),
-});
-
-export const breadcrumbSchema = (items: { name: string; path: string }[]) => ({
-  "@type": "BreadcrumbList",
-  itemListElement: items.map((it, i) => ({ "@type": "ListItem", position: i + 1, name: it.name, item: `${SITE_URL}${it.path}` })),
 });
 
 /** Render one or more schema.org nodes as a single JSON-LD graph. */

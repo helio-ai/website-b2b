@@ -1,8 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { Header } from "@/components/Header";
-import { Footer } from "@/components/Footer";
+import { Header } from "@/components/layout/Header";
+import { Footer } from "@/components/layout/Footer";
 import { SITE_URL } from "@/lib/site";
 import { DEFAULT_OG, JsonLd, orgSchema, websiteSchema } from "@/lib/seo";
 

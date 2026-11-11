@@ -1,83 +1,34 @@
-// Typed access to YourLio's own data, copied from website-v2 (yourlio.com)
-// and the earlier business.yourlio.com site. Facts only: nothing here is
+// YourLio's own facts and data for the landing page, from yourlio.com
+// (website-v2) and the earlier business.yourlio.com site. Nothing here is
 // invented for this site.
 import { CASE_STUDIES, type CaseStudy } from "./case-studies";
-import { SHOPIFY_REVIEW_SUMMARIES } from "./shopify-reviews.js";
-import { INTEGRATIONS as RAW_INTEGRATIONS } from "./integrations.js";
+import { INTEGRATIONS, type Integration } from "./integrations";
+import { REVIEWS, type Review } from "./reviews";
 
-/* ------------------------------------------------------------------ */
-/* Case studies (consented only)                                        */
-/* ------------------------------------------------------------------ */
+export type { CaseStudy, Integration, Review };
 
-export type { CaseStudy };
-export const caseStudies: CaseStudy[] = CASE_STUDIES;
-export const getCaseStudy = (slug: string) => caseStudies.find((c) => c.slug === slug);
+/* Case studies: cards here, full stories on yourlio.com ------------- */
+
 export const CASE_STUDIES_URL = "https://yourlio.com/case-studies";
 export const caseStudyUrl = (slug: string) => `${CASE_STUDIES_URL}/${slug}`;
+export const caseStudies = CASE_STUDIES;
 
-/** Studies whose story is closest to a business that books, quotes or serves. */
-export const featuredForBusiness = ["yourspex", "deodap", "sylvi-watches", "cureayu", "soulflower", "blue-tea", "bluetea"]
-  .map((s) => getCaseStudy(s))
-  .filter(Boolean) as CaseStudy[];
-
-/* ------------------------------------------------------------------ */
-/* Shopify App Store review summaries                                   */
-/* ------------------------------------------------------------------ */
-
-export type Review = {
-  brand: string;
-  person: string;
-  role: string;
-  photo: string;
-  rating: number;
-  date: string;
-  reviewId: string;
-  summary: string;
-};
-export const reviews: Review[] = SHOPIFY_REVIEW_SUMMARIES as unknown as Review[];
-export const reviewUrl = (id: string) => `https://apps.shopify.com/reviews/${id}`;
-
-/* ------------------------------------------------------------------ */
-/* Integrations                                                         */
-/* ------------------------------------------------------------------ */
-
-export type Integration = { slug: string; name: string; category: string; description: string; logo: string | null };
-
-// Shopify-only commerce apps are left off the business site.
-const SHOPIFY_ONLY = new Set(["recharge", "yotpo", "loop-returns", "judge-me", "shopify", "gokwik", "shopflo", "recurpay", "nector", "proship", "shiprocket", "aftership"]);
-
-export const integrations: Integration[] = (
-  RAW_INTEGRATIONS as unknown as { id: string; name: string; category: string; description: string; logo: string | null }[]
-)
-  .filter((i) => !SHOPIFY_ONLY.has(i.id))
-  .map((i) => ({ slug: i.id, name: i.name, category: i.category, description: i.description, logo: i.logo }));
-
-export const integrationCategories = [...new Set(integrations.map((i) => i.category))];
-
-/* ------------------------------------------------------------------ */
-/* Team (from yourlio.com/about)                                        */
-/* ------------------------------------------------------------------ */
-
-export const team = [
-  { name: "Prakash", role: "Founder & CEO", photo: "/team/prakash.webp" },
-  { name: "Priyansh", role: "Founder & CTO", photo: "/team/priyansh.webp" },
-  { name: "Anand Doddamani", role: "Founding Engineer, Tech Lead", photo: "/team/anand.webp" },
-  { name: "Ishwar Gowda", role: "Founding Engineer, Tech Lead", photo: "/team/ishwar.webp" },
-  { name: "Anirban Sinha", role: "Frontend Engineer", photo: "/team/anirban.webp" },
-  { name: "Aditya Anand", role: "Frontend Engineer", photo: "/team/aditya.webp" },
-  { name: "Anubha Kumari", role: "Software Engineer", photo: "/team/anubha.webp" },
-  { name: "Mahanam Rahul", role: "Head of Business & Sales", photo: "/team/mahanam.webp" },
-  { name: "Vaibhav Kumar", role: "Head of Growth", photo: "/team/vaibhav.webp" },
-  { name: "Neha Joshi", role: "Sales Development Rep.", photo: "/team/neha.webp" },
+/** Stories closest to a business that books, quotes or serves, shown first. */
+const FEATURED = ["yourspex", "deodap", "sylvi-watches", "cureayu", "soulflower", "bluetea"];
+export const featuredStories = [
+  ...FEATURED.map((slug) => CASE_STUDIES.find((c) => c.slug === slug)).filter((c): c is CaseStudy => Boolean(c)),
+  ...CASE_STUDIES.filter((c) => !FEATURED.includes(c.slug)),
 ];
 
-/* ------------------------------------------------------------------ */
-/* Customer logos (yourlio.com, real customers)                         */
-/* ------------------------------------------------------------------ */
+/* Reviews and integrations ------------------------------------------ */
 
-// Same list, files and trimmed sizes as the yourlio.com logo wall
-// (website-v2 src/data/brand-logos.js). w and h are the trimmed file size.
-const LOGOS: [string, string, number, number][] = [
+export const reviews = REVIEWS;
+export const reviewUrl = (id: string) => `https://apps.shopify.com/reviews/${id}`;
+export const integrations = INTEGRATIONS;
+
+/* Customer logos: same files and trimmed sizes as the yourlio.com wall */
+
+const LOGOS: [name: string, file: string, w: number, h: number][] = [
   ["Sugar Cosmetics", "sugar_cosmetics_yourlio.webp", 392, 126],
   ["Dot & Key", "dot_and_key_yourlio.svg", 278, 65],
   ["Baidyanath", "baidyanath_yourlio.webp", 212, 41],
@@ -106,19 +57,14 @@ const LOGOS: [string, string, number, number][] = [
   ["Ugees", "ugees_yourlio.webp", 100, 76],
 ];
 
-/**
- * Display size per logo so every mark carries about the same visual weight:
- * wide wordmarks get shorter, square marks get taller, within limits.
- */
+/** Display size per logo so wide wordmarks and square marks carry the same visual weight. */
 export const customerLogos = LOGOS.map(([name, file, w, h]) => {
   const ratio = w / h;
   const height = Math.round(Math.min(46, Math.max(22, Math.sqrt(5200 / ratio))));
   return { name, src: `/logos/${file}`, width: Math.round(height * ratio), height };
 });
 
-/* ------------------------------------------------------------------ */
-/* Pricing (USD, from yourlio.com/pricing, checked 2026-10)             */
-/* ------------------------------------------------------------------ */
+/* Pricing (USD, from yourlio.com/pricing, checked October 2026) ------ */
 
 export const plans = [
   { id: "starter", name: "Starter", tagline: "Getting started", price: 49, convos: 250, overage: 0.3, support: "Email support",
@@ -153,70 +99,79 @@ export const aiCrm = {
 };
 
 export const suites = [
-  { id: "social", name: "Social Suite", price: 49, tagline: "Turn comments into conversations",
-    features: ["Comment to DM on posts, Reels and ads, Instagram and Facebook", "Story replies, mentions and ad comments answered", "Comment tagging, auto hide and per post analytics"] },
-  { id: "marketing", name: "Marketing Suite", price: 199, tagline: "Campaigns and journeys",
-    features: ["Campaigns on WhatsApp, email, SMS and web push", "AI segments in plain words, refreshed daily", "Drag and drop journeys", "Control groups that prove the real lift"], note: "No markup on WhatsApp. You pay Meta directly." },
+  { id: "social", name: "Social Suite", price: 49, features: ["Comment to DM on posts, Reels and ads, Instagram and Facebook", "Story replies, mentions and ad comments answered"] },
+  { id: "marketing", name: "Marketing Suite", price: 199, features: ["Campaigns on WhatsApp, email, SMS and web push", "Drag and drop journeys, with no markup on WhatsApp"] },
 ];
 
-/* ------------------------------------------------------------------ */
-/* Business platform content (from the earlier business.yourlio.com)    */
-/* ------------------------------------------------------------------ */
+/* How it works, why switch and the lead pipeline --------------------- */
 
-export const b2bChannels = [
-  { icon: "Globe", title: "Chat agent on your website", text: "Answers enquiries, asks your qualifying questions and books the call, day or night." },
-  { icon: "Phone", title: "AI calls", text: "An AI voice agent talks to leads on the phone and qualifies them the same way it does in chat." },
-  { icon: "MessageCircle", title: "WhatsApp", text: "Answers enquiries, follows up and sends campaigns from your WhatsApp Business number." },
-  { icon: "Users", title: "Instagram and Facebook", text: "Turns comments and DMs into qualified conversations, automatically." },
-  { icon: "Target", title: "Meta ads", text: "Leads from your Facebook and Instagram ads go straight into a conversation with the agent." },
-  { icon: "Mail", title: "Email", text: "Replies and follows up by email with the full history of every lead." },
+export const steps = [
+  { title: "Answer every enquiry", text: "Replies to visitors in seconds, day or night, in the language they write in." },
+  { title: "Ask your questions", text: "Asks what your sales team needs to know, with tap options that answer in one tap." },
+  { title: "Collect contact details", text: "Name, company, phone and work email, inside the chat. No separate form page." },
+  { title: "Book the call", text: "Offers open times and books the call. The invite lands in their email." },
 ];
 
-export const b2bSteps = [
-  { icon: "MessagesSquare", title: "Answer every enquiry", text: "Replies to visitors in seconds, day or night, in the language they write in." },
-  { icon: "Filter", title: "Ask your questions", text: "Asks what your sales team needs to know, with tap options that answer in one tap." },
-  { icon: "ClipboardCheck", title: "Collect contact details", text: "Name, company, phone and work email, inside the chat. No separate form page." },
-  { icon: "Calendar", title: "Book the call", text: "Offers open times and books the call. The invite lands in their email." },
-];
-
-export const b2bSwitch = [
+export const beforeAfter = [
   { before: "Button menus that break the moment someone types a real question.", after: "Understands free text, then guides with tap options where they help." },
   { before: "The website chat and WhatsApp ask the same questions twice.", after: "One memory of every lead across your website and WhatsApp." },
   { before: "Leads wait in a sheet until someone follows up by hand.", after: "Details, answers and the booked call reach your team together." },
 ];
 
-export const b2bPipeline = {
-  stages: [
-    { label: "New", leads: [{ company: "Lumen Freight", need: "Demo request", source: "Meta ad" }, { company: "Oakridge Clinics", need: "Website and SEO", source: "Instagram" }] },
-    { label: "Qualifying", leads: [{ company: "Harbor Foods", need: "Bulk quote", source: "WhatsApp" }] },
-    { label: "Qualified", leads: [{ company: "Brightline Legal", need: "Managed IT", source: "AI call" }] },
-    { label: "Call booked", leads: [{ company: "Northwind Offices", need: "CCTV install", source: "Website chat", when: "Wed, 2:00 pm" }] },
-  ],
-  points: [
-    "Every answer from every channel is saved on the lead, so nobody asks twice.",
-    "Leads move through stages your team can see and change, from new to booked.",
-    "Syncs with HubSpot and the other tools you already use.",
-  ],
-};
+/** Sample leads, not customers. */
+export const pipeline = [
+  { label: "New", leads: [{ company: "Lumen Freight", need: "Demo request", source: "Meta ad" }, { company: "Oakridge Clinics", need: "Website and SEO", source: "Instagram" }] },
+  { label: "Qualifying", leads: [{ company: "Harbor Foods", need: "Bulk quote", source: "WhatsApp" }] },
+  { label: "Qualified", leads: [{ company: "Brightline Legal", need: "Managed IT", source: "AI call" }] },
+  { label: "Call booked", leads: [{ company: "Northwind Offices", need: "CCTV install", source: "Website chat" }] },
+];
 
-export const b2bFaqs = [
+/* Comparisons: summaries of yourlio.com/compare, sources read August 2026 */
+
+export const comparisons = [
+  {
+    slug: "intercom",
+    name: "Intercom",
+    points: [
+      { them: "Billed per seat, from $29 to $132 a seat each month on annual billing.", us: "Unlimited team seats on every AI Agent plan." },
+      { them: "AI outcomes from $0.99 each, on top of seats.", us: "AI conversations included in the plan, from 250 for $49 a month." },
+      { them: "Pro, Copilot and Proactive Support Plus sold separately.", us: "Add only the suites you need: Social at $49, Marketing at $199." },
+    ],
+  },
+  {
+    slug: "manychat",
+    name: "Manychat",
+    points: [
+      { them: "Runs the flows you build, step by step.", us: "You set the questions and the goal; the agent runs the conversation." },
+      { them: "AI sold as an add on that answers from pages you load into it.", us: "The AI agent is the product, on every AI Agent plan." },
+      { them: "Focused on Instagram, Messenger and WhatsApp automation.", us: "Website chat, WhatsApp, Instagram, Facebook, email and calls in one inbox." },
+    ],
+  },
+  {
+    slug: "tidio",
+    name: "Tidio",
+    points: [
+      { them: "Lyro AI is an add on, from $32.50 a month for 50 AI conversations.", us: "AI agent included: 250 conversations for $49 a month." },
+      { them: "Flows are another add on on top.", us: "No flow builder needed; the agent runs the conversation." },
+      { them: "Self serve plans capped at 10 seats.", us: "Unlimited team seats." },
+    ],
+  },
+];
+
+/* FAQ ----------------------------------------------------------------- */
+
+export const faqs = [
   { q: "What is YourLio for business?", a: "YourLio for business is an AI agent, shared inbox and CRM for businesses that sell through a conversation: a call, a quote, a site visit or an appointment. It answers enquiries on your website, WhatsApp, Instagram and Facebook, asks your qualifying questions, collects contact details and books the call." },
   { q: "Does YourLio work if my website is not on Shopify?", a: "Yes. The same agent that runs on Shopify stores also runs on custom built websites, WooCommerce, Magento and BigCommerce. Our team helps you add it to your site." },
   { q: "Can it ask our own qualifying questions?", a: "Yes. You decide what the agent needs to know before a call, such as team size, budget, location or timeline. It asks with tap options, and visitors can still type freely." },
   { q: "Can visitors book a sales call inside the chat?", a: "Yes. After collecting their details, the agent offers open times and books the call in the chat. The visitor gets a calendar invite by email and can reschedule from it." },
   { q: "Does it work on WhatsApp too?", a: "Yes. Connect your WhatsApp Business number and the same agent answers enquiries there, with the same memory of each lead. You can also send WhatsApp campaigns and let the agent handle the replies." },
-  { q: "What does YourLio include for B2B teams?", a: "A chat agent for your website, AI calls, WhatsApp, Instagram and Facebook automation, leads from Meta ads and email, all qualified by one AI agent. Every lead lands in one CRM with stages, which syncs with HubSpot and the tools you already use." },
   { q: "Does YourLio include a CRM?", a: "Yes. Every lead from chat, calls, WhatsApp, social, ads and email lands in one CRM with their answers and the full conversation, and your team moves it through stages from new to booked." },
   { q: "Do I need to build chatbot or WhatsApp flows?", a: "No. There are no flow trees to draw. You set the questions and the goal, such as a booked call or a quote request, and the agent runs the conversation, using tap options and forms where they make answering faster." },
   { q: "Can my sales team take over a conversation?", a: "Yes. Every conversation sits in the shared inbox, so a rep can step in at any point. Visitors can also ask to talk to a person, and the AI hands off with a reason." },
   { q: "Which languages does it support?", a: "Visitors can write in their own language and the agent replies in it. Test your customers' languages and terms with real questions during setup." },
-  { q: "How is YourLio priced for B2B?", a: "AI Agent plans are priced by AI conversations and start at $49 a month for 250 conversations. AI CRM & Helpdesk is one flat team price quoted on a call. Book a demo and we will confirm the right setup for your volume and channels." },
+  { q: "How much does YourLio cost?", a: "AI Agent plans start at $49 a month for 250 AI conversations, with Growth at $119, Pro at $249 and Scale at $399. AI CRM & Helpdesk is one flat price for the whole team, quoted on a call. Prices are in USD." },
+  { q: "Do you charge per seat?", a: "No. Every AI Agent plan includes unlimited team seats, so your whole team can use the shared inbox and step into chats." },
+  { q: "Are WhatsApp and calling charges included?", a: "No. Meta messaging fees and carrier calling charges are separate. For WhatsApp you pay Meta directly, with no YourLio markup." },
   { q: "How does YourLio handle my data?", a: "YourLio uses your connected business information and conversations to answer enquiries. Read the Security and Privacy pages on yourlio.com and contact us with specific data handling, retention or security requirements." },
-];
-
-export const pillars = [
-  { icon: "Target", title: "Outcome over output", text: "Every feature ships against one question: did it move a lead closer to a booked call or a sale?" },
-  { icon: "Zap", title: "Answer before they leave", text: "The agent replies in seconds, day or night, so enquiries do not go cold while your team is busy." },
-  { icon: "Layers", title: "One memory, every channel", text: "Website, WhatsApp, Instagram, Facebook, email and calls share one record of each lead." },
-  { icon: "HeartHandshake", title: "People stay in charge", text: "Your team sees every conversation and can step in at any point from the shared inbox." },
 ];
