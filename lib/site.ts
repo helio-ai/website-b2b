@@ -62,7 +62,7 @@ export const productMenu: { title: string; links: NavLink[] }[] = [
     title: "Platform",
     links: [
       { label: "What is YourLio for business?", href: "/omnichannel-ai-crm-conversation-platform", icon: "Layers" },
-      { label: "Customer Stories", href: "/customers", icon: "Award" },
+      { label: "Customer Stories", href: `${MAIN_SITE}/case-studies`, icon: "Award" },
       { label: "AI Calls and WhatsApp Calling", href: "/whatsapp-business-calling-api", icon: "Phone" },
       { label: "WhatsApp Business API", href: "/whatsapp-business-api", icon: "MessageCircle" },
     ],
@@ -183,7 +183,7 @@ export const footerColumns: { title: string; links: NavLink[] }[] = [
     title: "Company",
     links: [
       { label: "About Us", href: "/about" },
-      { label: "Customer Stories", href: "/customers" },
+      { label: "Customer Stories", href: `${MAIN_SITE}/case-studies` },
       { label: "FAQs", href: "/faqs" },
       { label: "Partner Program", href: "/reseller" },
       { label: "Refer & Earn", href: "/referral" },

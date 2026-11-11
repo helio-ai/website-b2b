@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 import { alternatives, faqs, featurePages, industries } from "@/lib/content";
-import { caseStudies, integrations } from "@/lib/yourlio";
+import { integrations } from "@/lib/yourlio";
 import { SITE_URL } from "@/lib/site";
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -11,8 +11,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     page("/demo", 0.9),
     ...Object.keys(featurePages).map((s) => page(`/${s}`, 0.8)),
     ...industries.map((i) => page(`/industry/${i.slug}`, 0.8)),
-    page("/customers", 0.7),
-    ...caseStudies.map((c) => ({ ...page(`/customers/${c.slug}`, 0.6), lastModified: c.updated })),
     page("/integrations", 0.7),
     ...integrations.map((i) => page(`/integrations/${i.slug}`, 0.5)),
     page("/alternatives", 0.6),

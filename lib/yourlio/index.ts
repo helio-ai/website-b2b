@@ -1,7 +1,7 @@
 // Typed access to YourLio's own data, copied from website-v2 (yourlio.com)
 // and the earlier business.yourlio.com site. Facts only: nothing here is
 // invented for this site.
-import { CASE_STUDIES } from "./case-studies.js";
+import { CASE_STUDIES, type CaseStudy } from "./case-studies";
 import { SHOPIFY_REVIEW_SUMMARIES } from "./shopify-reviews.js";
 import { INTEGRATIONS as RAW_INTEGRATIONS } from "./integrations.js";
 
@@ -9,38 +9,11 @@ import { INTEGRATIONS as RAW_INTEGRATIONS } from "./integrations.js";
 /* Case studies (consented only)                                        */
 /* ------------------------------------------------------------------ */
 
-export type CaseStudy = {
-  slug: string;
-  client: string;
-  title: string;
-  tagline: string;
-  seoTitle: string;
-  seoDescription: string;
-  date: string;
-  updated: string;
-  industry: string;
-  channels: string[];
-  market: string;
-  brandUrl: string;
-  window: string;
-  windowLong: string;
-  heroImage: string;
-  cardImage: string;
-  ogImage: string;
-  heroAlt: string;
-  answer: string;
-  stats: { value: string; display: string; label: string }[];
-  features: { name: string; description: string }[];
-  blockers: string[];
-  results: { metric: string; result: string; note?: string }[];
-  faqs: { question: string; answer: string }[];
-  playbook: { lead: string; text: string }[];
-  provenance: string;
-  content: { introduction: string; sections: { title: string; paragraphs: string[] }[] };
-};
-
-export const caseStudies: CaseStudy[] = CASE_STUDIES as unknown as CaseStudy[];
+export type { CaseStudy };
+export const caseStudies: CaseStudy[] = CASE_STUDIES;
 export const getCaseStudy = (slug: string) => caseStudies.find((c) => c.slug === slug);
+export const CASE_STUDIES_URL = "https://yourlio.com/case-studies";
+export const caseStudyUrl = (slug: string) => `${CASE_STUDIES_URL}/${slug}`;
 
 /** Studies whose story is closest to a business that books, quotes or serves. */
 export const featuredForBusiness = ["yourspex", "deodap", "sylvi-watches", "cureayu", "soulflower", "blue-tea", "bluetea"]

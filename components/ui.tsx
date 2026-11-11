@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ArrowRight, Plus, Star } from "lucide-react";
 import { Icon } from "./Icon";
 import { BRAND, SHOPIFY_REVIEWS_URL } from "@/lib/site";
-import { customerLogos, pillars, reviewUrl, reviews, type CaseStudy } from "@/lib/yourlio";
+import { CASE_STUDIES_URL, caseStudyUrl, customerLogos, pillars, reviewUrl, reviews, type CaseStudy } from "@/lib/yourlio";
 import { JsonLd, faqSchema } from "@/lib/seo";
 
 /* ------------------------------------------------------------------ */
@@ -176,60 +176,6 @@ export function ImagePlaceholder({ label = "Image", ratio = "aspect-[4/3]", dark
   );
 }
 
-/** Sample lead conversation used as hero art. Illustrative leads, not customers. */
-export function AppMock({ className = "" }: { className?: string }) {
-  const rows = [
-    { name: "Northwind Offices", msg: "We need CCTV for our office", ch: "bg-accent-500", active: true },
-    { name: "Harbor Foods", msg: "Bulk quote for packaging boxes", ch: "bg-emerald-500" },
-    { name: "Oakridge Clinics", msg: "Website and SEO rebuild", ch: "bg-pink-500" },
-    { name: "Lumen Freight", msg: "Can our sales team try this?", ch: "bg-sky-500" },
-    { name: "Brightline Legal", msg: "IT support for 40 people", ch: "bg-amber-500" },
-  ];
-  return (
-    <div aria-hidden="true" className={`overflow-hidden rounded-2xl bg-white text-left text-text shadow-2xl ring-1 ring-black/5 ${className}`}>
-      <div className="flex items-center gap-1.5 border-b border-line bg-muted px-4 py-2.5">
-        <span className="h-2.5 w-2.5 rounded-full bg-rose-300" />
-        <span className="h-2.5 w-2.5 rounded-full bg-amber-300" />
-        <span className="h-2.5 w-2.5 rounded-full bg-emerald-300" />
-        <span className="ml-3 text-[11px] font-medium text-text-3">YourLio inbox</span>
-      </div>
-      <div className="grid grid-cols-12">
-        <div className="col-span-5 border-r border-line sm:col-span-4">
-          {rows.map((r) => (
-            <div key={r.name} className={`flex items-center gap-2.5 px-3 py-3 ${r.active ? "bg-brand-50" : ""}`}>
-              <span className="relative inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-line text-[10px] font-semibold text-text-2">
-                {r.name.slice(0, 2)}
-                <span className={`absolute -right-0.5 -bottom-0.5 h-3 w-3 rounded-full ring-2 ring-white ${r.ch}`} />
-              </span>
-              <span className="min-w-0">
-                <span className="block truncate text-xs font-semibold">{r.name}</span>
-                <span className="block truncate text-[11px] text-text-3">{r.msg}</span>
-              </span>
-            </div>
-          ))}
-        </div>
-        <div className="col-span-7 flex flex-col gap-2.5 p-4 sm:col-span-8">
-          <div className="max-w-[80%] rounded-2xl rounded-tl-sm bg-muted px-3 py-2 text-xs">We need CCTV for our office</div>
-          <div className="ml-auto max-w-[85%] rounded-2xl rounded-tr-sm bg-brand-500 px-3 py-2 text-xs text-white">
-            Happy to help. Which areas need coverage?
-          </div>
-          <div className="ml-auto flex flex-wrap justify-end gap-1.5">
-            {["Front entry", "Lobby & hallways", "Full perimeter + inside"].map((o, i) => (
-              <span key={o} className={`rounded-full px-2.5 py-1 text-[11px] ring-1 ${i === 2 ? "bg-brand-500 text-white ring-brand-500" : "bg-white text-brand-700 ring-brand-200"}`}>
-                {o}
-              </span>
-            ))}
-          </div>
-          <div className="mt-1 flex items-center gap-2 rounded-xl bg-emerald-50 px-3 py-2 text-[11px] text-emerald-800 ring-1 ring-emerald-200">
-            <Icon name="Calendar" className="h-3.5 w-3.5" /> Site Survey Call booked: Wed, 2:00 pm
-          </div>
-          <div className="mt-auto hidden h-9 rounded-lg border border-line sm:block" />
-        </div>
-      </div>
-    </div>
-  );
-}
-
 /* ------------------------------------------------------------------ */
 /* Content blocks                                                       */
 /* ------------------------------------------------------------------ */
@@ -391,12 +337,17 @@ export function FaqSection({ title = "Frequently asked questions", items }: { ti
   );
 }
 
+/** Card for a published case study. The full story lives on yourlio.com. */
 export function StoryCard({ study }: { study: CaseStudy }) {
-  const top = study.stats[0];
   return (
-    <Link href={`/customers/${study.slug}`} className="group flex h-full flex-col overflow-hidden rounded-2xl bg-white ring-1 ring-line transition-shadow hover:shadow-lg">
+    <a
+      href={caseStudyUrl(study.slug)}
+      target="_blank"
+      rel="noopener"
+      className="group flex h-full flex-col overflow-hidden rounded-2xl bg-white ring-1 ring-line transition-shadow hover:shadow-lg"
+    >
       <div className="aspect-[2/1] overflow-hidden bg-muted">
-        <img src={study.cardImage} alt={study.heroAlt} loading="lazy" className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
+        <img src={study.image} alt={study.imageAlt ?? `${study.client} case study`} loading="lazy" className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
       </div>
       <div className="flex flex-1 flex-col p-5">
         <div className="flex items-center justify-between gap-2">
@@ -404,13 +355,14 @@ export function StoryCard({ study }: { study: CaseStudy }) {
           <span className="truncate rounded-full bg-muted px-2.5 py-0.5 text-xs text-text-2">{study.channels.slice(0, 2).join(", ")}</span>
         </div>
         <h3 className="mt-3 text-base font-semibold leading-snug group-hover:text-brand-600">{study.title}</h3>
-        {top && (
-          <p className="mt-auto pt-4 text-sm text-text-2">
-            <span className="text-2xl font-semibold text-text">{top.display}</span> {top.label}
-          </p>
-        )}
+        <p className="mt-auto pt-4 text-sm text-text-2">
+          <span className="text-2xl font-semibold text-text">{study.stat.value}</span> {study.stat.label}
+        </p>
+        <span className="mt-3 inline-flex items-center gap-1 text-xs font-medium text-brand-600">
+          Read on yourlio.com <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+        </span>
       </div>
-    </Link>
+    </a>
   );
 }
 
@@ -422,7 +374,7 @@ export function StoryCarousel({ title = "Results from YourLio customers", storie
           <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">{title}</h2>
           <p className="mt-3 text-sm text-text-2">Published case studies with reporting periods. Individual results, not guarantees.</p>
         </div>
-        <TextLink href="/customers">See all stories</TextLink>
+        <TextLink href={CASE_STUDIES_URL}>See all stories</TextLink>
       </div>
       <div className="no-scrollbar -mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-2 sm:-mx-6 sm:px-6 lg:mx-0 lg:px-0">
         {stories.map((s) => (
@@ -538,7 +490,7 @@ export function CtaBand({
   return (
     <section className="bg-surface px-4 pb-16 sm:px-6 sm:pb-24 lg:px-8">
       <div className="bg-grid-dark relative mx-auto max-w-[1240px] overflow-hidden rounded-3xl bg-ink px-6 py-14 text-center text-white sm:px-12 sm:py-20">
-        <div className="pointer-events-none absolute -top-24 left-1/2 h-64 w-[36rem] -translate-x-1/2 rounded-full bg-brand-500/30 blur-3xl" aria-hidden="true" />
+        <div className="pointer-events-none absolute -top-24 left-1/2 h-64 w-[36rem] -translate-x-1/2 rounded-full bg-brand-400/45 blur-3xl" aria-hidden="true" />
         <h2 className="relative mx-auto max-w-2xl text-3xl font-semibold tracking-tight text-balance sm:text-4xl">{title}</h2>
         <p className="relative mx-auto mt-4 max-w-xl text-white/70">{sub}</p>
         <div className="relative mt-8">
@@ -573,7 +525,7 @@ export function PageHero({
 }) {
   return (
     <section className="bg-grid-dark relative overflow-hidden bg-ink pt-28 pb-16 text-white sm:pt-36 sm:pb-24">
-      <div className="pointer-events-none absolute -top-40 left-1/2 h-[28rem] w-[60rem] -translate-x-1/2 rounded-full bg-brand-500/25 blur-3xl" aria-hidden="true" />
+      <div className="pointer-events-none absolute -top-40 left-1/2 h-[28rem] w-[60rem] -translate-x-1/2 rounded-full bg-brand-400/40 blur-3xl" aria-hidden="true" />
       <Container className="relative">
         <div className={art === "none" ? "mx-auto max-w-3xl text-center" : "grid items-center gap-12 lg:grid-cols-2"}>
           <div className={art === "none" ? "" : "text-center lg:text-left"}>
@@ -588,7 +540,7 @@ export function PageHero({
             <div className={`mt-8 flex ${art === "none" ? "justify-center" : "justify-center lg:justify-start"}`}>{ctas ?? <CtaPair />}</div>
             {children}
           </div>
-          {art === "mock" && <AppMock />}
+          {art === "mock" && <ProductShot shot="inbox" priority />}
           {art === "shot" && <ProductShot shot={shot ?? "inbox"} priority />}
           {art === "photo" && photo && <Photo src={photo.src} alt={photo.alt} ratio="aspect-[3/2]" className="ring-white/10" />}
         </div>

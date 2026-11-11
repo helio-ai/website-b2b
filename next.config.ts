@@ -26,6 +26,9 @@ const nextConfig: NextConfig = {
       { source: "/blog", destination: `${MAIN}/blog`, permanent: false },
       { source: "/help", destination: "https://docs.yourlio.ai", permanent: false },
       { source: "/video-tutorials", destination: "https://www.youtube.com/channel/UCF51KsPoGQVpodZRmTyMqfw", permanent: false },
+      // Case studies live on yourlio.com only.
+      { source: "/customers", destination: `${MAIN}/case-studies`, permanent: true },
+      { source: "/customers/:slug", destination: `${MAIN}/case-studies/:slug`, permanent: true },
       // Template pages for things YourLio does not offer point to the closest real page.
       { source: "/capture-tiktok-leads", destination: "/capture-leads", permanent: false },
       { source: "/mobile-app", destination: "/team-inbox", permanent: false },

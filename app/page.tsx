@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { ArrowRight, Star } from "lucide-react";
 import {
-  AppMock,
   Container,
   CtaBand,
   CtaPair,
@@ -20,7 +19,7 @@ import {
   TextLink,
 } from "@/components/ui";
 import { HomeLifecycleTabs } from "@/components/HomeLifecycleTabs";
-import { b2bChannels, b2bFaqs, b2bPipeline, b2bSteps, b2bSwitch, caseStudies, featuredForBusiness } from "@/lib/yourlio";
+import { CASE_STUDIES_URL, b2bChannels, b2bFaqs, b2bPipeline, b2bSteps, b2bSwitch, caseStudies, featuredForBusiness } from "@/lib/yourlio";
 import { JsonLd, softwareSchema } from "@/lib/seo";
 import { SHOPIFY_REVIEWS_URL } from "@/lib/site";
 
@@ -32,7 +31,7 @@ export default function Home() {
 
       {/* Hero */}
       <section className="bg-grid-dark relative overflow-hidden bg-ink pt-28 pb-16 text-white sm:pt-36 sm:pb-24">
-        <div className="pointer-events-none absolute -top-40 left-1/2 h-[30rem] w-[64rem] -translate-x-1/2 rounded-full bg-brand-500/25 blur-3xl" aria-hidden="true" />
+        <div className="pointer-events-none absolute -top-40 left-1/2 h-[30rem] w-[64rem] -translate-x-1/2 rounded-full bg-brand-400/40 blur-3xl" aria-hidden="true" />
         <Container className="relative text-center">
           <Link
             href="/whatsapp-business-calling-api"
@@ -61,7 +60,7 @@ export default function Home() {
             Rated 5.0 on the Shopify App Store, used by 100+ brands
           </a>
           <div className="mx-auto mt-14 max-w-5xl">
-            <AppMock />
+            <ProductShot shot="inbox" priority />
           </div>
         </Container>
       </section>
@@ -84,7 +83,7 @@ export default function Home() {
         <Container>
           <LogoStrip label="Brands that run their customer conversations on YourLio" />
           <div className="mt-8 text-center">
-            <TextLink href="/customers">Read their stories</TextLink>
+            <TextLink href={CASE_STUDIES_URL}>Read their stories</TextLink>
           </div>
         </Container>
       </section>

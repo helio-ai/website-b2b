@@ -51,7 +51,7 @@ YourLio AI was previously called Helio AI and is developed by HELIOAI AGENTIC SY
 - [Travel](https://business.yourlio.com/industry/travel)
 
 ## Evidence and comparisons
-- [Customer stories](https://business.yourlio.com/customers): 16 published YourLio case studies with reporting periods.
+- [Customer stories](https://yourlio.com/case-studies): 16 published YourLio case studies with reporting periods.
 - [YourLio vs Intercom](https://business.yourlio.com/alternatives/intercom)
 - [YourLio vs Manychat](https://business.yourlio.com/alternatives/manychat)
 - [YourLio vs Tidio](https://business.yourlio.com/alternatives/tidio)

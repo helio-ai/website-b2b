@@ -36,7 +36,7 @@ export default function PricingPage() {
         }}
       />
       <section className="bg-grid-dark relative overflow-hidden bg-ink pt-28 pb-20 text-white sm:pt-36">
-        <div className="pointer-events-none absolute -top-40 left-1/2 h-[28rem] w-[60rem] -translate-x-1/2 rounded-full bg-brand-500/25 blur-3xl" aria-hidden="true" />
+        <div className="pointer-events-none absolute -top-40 left-1/2 h-[28rem] w-[60rem] -translate-x-1/2 rounded-full bg-brand-400/40 blur-3xl" aria-hidden="true" />
         <Container className="relative">
           <div className="mx-auto mb-8 max-w-3xl text-center">
             <h1 className="text-4xl font-semibold tracking-tight text-balance sm:text-5xl">Pay for AI conversations, not seats</h1>

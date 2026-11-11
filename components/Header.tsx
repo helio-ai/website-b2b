@@ -7,7 +7,7 @@ import { ChevronDown, Menu, X, ArrowRight } from "lucide-react";
 import { Icon } from "./Icon";
 import { Logo } from "./Logo";
 import { APP_LOGIN_URL, industryMenu, productMenu, resourcesMenu, topLinks } from "@/lib/site";
-import { getCaseStudy } from "@/lib/yourlio";
+import { caseStudyUrl, getCaseStudy } from "@/lib/yourlio";
 
 type MenuKey = "product" | "industries" | "resources" | null;
 
@@ -273,15 +273,15 @@ function IndustryStory({ slug, label }: { slug?: string; label: string }) {
     );
   }
   return (
-    <Link href={`/customers/${study.slug}`} className="group block rounded-xl bg-white/5 p-3 text-white ring-1 ring-white/10 hover:bg-white/10">
+    <a href={caseStudyUrl(study.slug)} target="_blank" rel="noopener" className="group block rounded-xl bg-white/5 p-3 text-white ring-1 ring-white/10 hover:bg-white/10">
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={study.cardImage} alt={study.heroAlt} className="aspect-[2/1] w-full rounded-lg object-cover" loading="lazy" />
+      <img src={study.image} alt={study.imageAlt ?? `${study.client} case study`} className="aspect-[2/1] w-full rounded-lg object-cover" loading="lazy" />
       <span className="mt-3 block text-xs text-white/55">Customer story · {study.client}</span>
       <span className="mt-1 line-clamp-2 block text-sm font-medium">{study.title}</span>
       <span className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-brand-300 group-hover:text-white">
         Read the story <ArrowRight className="h-4 w-4" aria-hidden="true" />
       </span>
-    </Link>
+    </a>
   );
 }
 

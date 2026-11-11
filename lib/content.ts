@@ -1,7 +1,7 @@
 // Route data for every page. Copy lives in lib/copy/*, facts in lib/yourlio.
 import { FEATURE_COPY, type FeatureCopy } from "./copy/features";
 import { INDUSTRY_COPY, type IndustryCopy } from "./copy/industries";
-import { b2bFaqs, caseStudies } from "./yourlio";
+import { b2bFaqs } from "./yourlio";
 import { BRAND } from "./site";
 
 export type { FeatureCopy, IndustryCopy };
@@ -106,10 +106,3 @@ export const alternatives = [
 ];
 
 export const getAlternative = (slug: string) => alternatives.find((a) => a.slug === slug);
-
-/* ------------------------------------------------------------------ */
-/* Customer stories                                                     */
-/* ------------------------------------------------------------------ */
-
-export const customers = caseStudies;
-export const storyIndustries = [...new Set(caseStudies.flatMap((c) => c.channels))];
