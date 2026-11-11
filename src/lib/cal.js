@@ -11,7 +11,7 @@ function loadCal(namespace) {
         cal('ui', {
           hideEventTypeDetails: false,
           layout: 'month_view',
-          cssVarsPerTheme: { light: { 'cal-brand': '#0c184a' }, dark: { 'cal-brand': '#4f7cff' } },
+          cssVarsPerTheme: { light: { 'cal-brand': '#6d28d9' }, dark: { 'cal-brand': '#a78bfa' } },
         });
         return cal;
       });

@@ -4,8 +4,8 @@
   "description": "An AI agent that qualifies leads and books sales calls on your website and WhatsApp.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#070d24",
-  "theme_color": "#070d24",
+  "background_color": "#ffffff",
+  "theme_color": "#4c1287",
   "icons": [
     { "src": "/favicon-32x32.png", "type": "image/png", "sizes": "32x32" },
     { "src": "/apple-touch-icon.png", "type": "image/png", "sizes": "180x180" },
