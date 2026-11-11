@@ -3,37 +3,50 @@ import {
   CtaBand,
   FaqSection,
   FeatureGrid,
-  LogoStrip,
   PageHero,
   ProductShot,
-  ProofStats,
   Section,
   SectionHeading,
   SplitFeature,
-  StoryCarousel,
   Container,
   type ShotKey,
 } from "@/components/ui";
-import { featuredForBusiness, pillars } from "@/lib/yourlio";
+import { ExtraSection, ProductVideo, StorySpotlight } from "@/components/FeatureSections";
+import { FEATURE_MEDIA } from "@/lib/featureMedia";
 import { JsonLd, breadcrumbSchema } from "@/lib/seo";
 import type { FeatureCopy } from "@/lib/content";
 
-const STEP_SHOTS: ShotKey[] = ["agent", "inbox", "profiles", "channels", "helpdesk", "journeys", "comment-to-dm"];
+const STEP_SHOTS: ShotKey[] = ["agent", "inbox", "profiles", "channels", "helpdesk", "journeys", "comment-to-dm", "results"];
 
-/** One template drives every product, solution and WhatsApp page; the copy comes from lib/copy/features.ts. */
+/**
+ * Template for every product, solution and WhatsApp page. Copy comes from
+ * lib/copy/features.ts; the hero media, featured story and topic section
+ * from lib/featureMedia.ts, so no two pages look the same.
+ */
 export function FeatureTemplate({ slug, page }: { slug: string; page: FeatureCopy }) {
+  const media = FEATURE_MEDIA[slug] ?? { shot: page.image as ShotKey, story: "soulflower", extra: "channels" as const };
   const crumbs = [
     { name: "Home", path: "/" },
     { name: page.title, path: `/${slug}` },
   ];
-  const otherShots = STEP_SHOTS.filter((s) => s !== page.image);
+  // Step visuals: start from a different screenshot on each page and skip the hero one.
+  const offset = [...slug].reduce((a, c) => a + c.charCodeAt(0), 0) % STEP_SHOTS.length;
+  const stepShots = [...STEP_SHOTS.slice(offset), ...STEP_SHOTS.slice(0, offset)].filter((s) => s !== media.shot && `${s}-dark` !== media.shot);
 
   return (
     <>
       <JsonLd data={breadcrumbSchema(crumbs)} />
-      <PageHero eyebrow={page.eyebrow} icon={page.icon} title={page.h1} sub={page.sub} art="shot" shot={page.image as ShotKey}>
-        <p className="mt-6 text-xs text-white/50 lg:text-left">Included in: {page.plan}</p>
+      <PageHero eyebrow={page.eyebrow} icon={page.icon} title={page.h1} sub={page.sub} art="none">
+        <p className="mt-6 pb-16 text-xs text-white/50 sm:pb-24">Included in: {page.plan}</p>
       </PageHero>
+
+      <section className="relative -mt-24 sm:-mt-36">
+        <Container className="relative z-10">
+          <div className="mx-auto max-w-5xl">
+            {media.video ? <ProductVideo name={media.video} label={`${page.title} in YourLio`} /> : <ProductShot shot={media.shot ?? "inbox-dark"} priority sizes="(min-width: 1100px) 1024px, 100vw" />}
+          </div>
+        </Container>
+      </section>
 
       <section className="border-b border-line bg-surface">
         <Container className="py-3">
@@ -43,19 +56,13 @@ export function FeatureTemplate({ slug, page }: { slug: string; page: FeatureCop
         </Container>
       </section>
 
-      <section className="bg-surface py-12">
-        <Container>
-          <LogoStrip label="Brands that run their conversations on YourLio" />
-        </Container>
-      </section>
-
-      {/* Capabilities */}
-      <Section tone="muted">
-        <SectionHeading eyebrow={page.title} title={`What ${page.title} does`} sub={page.sub} />
+      <Section>
+        <SectionHeading eyebrow={page.title} title={`What ${page.title} does`} />
         <FeatureGrid items={page.capabilities.map((c) => ({ title: c.title, body: c.body, icon: c.icon }))} />
       </Section>
 
-      {/* How it works */}
+      <ExtraSection kind={media.extra} />
+
       <Section>
         <SectionHeading title="How it works" />
         <div className="space-y-20">
@@ -67,25 +74,13 @@ export function FeatureTemplate({ slug, page }: { slug: string; page: FeatureCop
               title={s.title}
               body={s.body}
               bullets={s.bullets}
-              visual={<ProductShot shot={i === 0 ? (page.image as ShotKey) : otherShots[(i - 1) % otherShots.length]} />}
+              visual={<ProductShot shot={stepShots[i % stepShots.length]} />}
             />
           ))}
         </div>
       </Section>
 
-      {/* Proof */}
-      <Section tone="dark">
-        <SectionHeading dark title="Results from published YourLio case studies" sub="Each figure comes from a case study with its own reporting period." />
-        <ProofStats dark />
-      </Section>
-
-      {/* Principles */}
-      <Section>
-        <SectionHeading title="Built the way your team works" />
-        <FeatureGrid cols={4} items={pillars.map((p) => ({ title: p.title, body: p.text, icon: p.icon }))} />
-      </Section>
-
-      <StoryCarousel stories={featuredForBusiness} />
+      <StorySpotlight slug={media.story} />
       <FaqSection title={`${page.title}: frequently asked questions`} items={page.faqs} />
       <CtaBand />
     </>

@@ -1,13 +1,16 @@
 // Site-wide settings and navigation for YourLio for business
 // (business.yourlio.com). The header, mobile menu and footer all render from
-// this file. Company, legal and ecommerce pages live on yourlio.com.
+// this file. Menu labels and layout follow the original template; company,
+// legal and ecommerce pages live on yourlio.com.
 
 export const BRAND = "YourLio";
 export const SITE_URL = "https://business.yourlio.com";
 export const MAIN_SITE = "https://yourlio.com";
 export const DOCS_URL = "https://docs.yourlio.ai";
+export const YOUTUBE_URL = "https://www.youtube.com/channel/UCF51KsPoGQVpodZRmTyMqfw";
 export const CONTACT_EMAIL = "prakash@helioai.tech";
-export const APP_LOGIN_URL = "https://app.helioai.tech";
+export const APP_LOGIN_URL = "https://app.helioai.tech/login";
+export const APP_SIGNUP_URL = "https://app.helioai.tech/signup";
 export const SHOPIFY_APP_URL = "https://apps.shopify.com/helio-ai";
 export const SHOPIFY_REVIEWS_URL = "https://apps.shopify.com/helio-ai/reviews";
 
@@ -33,10 +36,10 @@ export const productMenu: { title: string; links: NavLink[] }[] = [
   {
     title: "Capture",
     links: [
-      { label: "Leads from Meta ads", href: "/capture-leads-from-ads", icon: "Target" },
-      { label: "Instagram and Facebook", href: "/capture-leads", icon: "Users" },
-      { label: "Website chat and popups", href: "/capture-website-leads", icon: "Globe" },
-      { label: "Offline: QR codes and links", href: "/capture-offline-leads", icon: "QrCode" },
+      { label: "Capture from Ads", href: "/capture-leads-from-ads", icon: "Target" },
+      { label: "Capture from Social", href: "/capture-leads", icon: "Users" },
+      { label: "Capture from Website", href: "/capture-website-leads", icon: "Globe" },
+      { label: "Capture from Offline", href: "/capture-offline-leads", icon: "Store" },
     ],
   },
   {
@@ -53,18 +56,17 @@ export const productMenu: { title: string; links: NavLink[] }[] = [
     title: "Retain",
     links: [
       { label: "Conversational Support", href: "/conversational-support", icon: "Headphones" },
-      { label: "Campaigns and Newsletters", href: "/send-promotions-and-newsletters", icon: "Megaphone" },
-      { label: "Follow ups and Reminders", href: "/send-renewal-reminders", icon: "Bell" },
-      { label: "Feedback Requests", href: "/surveys", icon: "ClipboardCheck" },
+      { label: "Promotions and Newsletters", href: "/send-promotions-and-newsletters", icon: "Megaphone" },
+      { label: "Renewal Reminders", href: "/send-renewal-reminders", icon: "Bell" },
+      { label: "CSAT or NPS Surveys", href: "/surveys", icon: "ClipboardCheck" },
     ],
   },
   {
     title: "Platform",
     links: [
-      { label: "What is YourLio for business?", href: "/omnichannel-ai-crm-conversation-platform", icon: "Layers" },
-      { label: "Customer Stories", href: `${MAIN_SITE}/case-studies`, icon: "Award" },
-      { label: "AI Calls and WhatsApp Calling", href: "/whatsapp-business-calling-api", icon: "Phone" },
-      { label: "WhatsApp Business API", href: "/whatsapp-business-api", icon: "MessageCircle" },
+      { label: `What is ${BRAND}?`, href: "/omnichannel-ai-crm-conversation-platform", icon: "Layers" },
+      { label: "Success Stories", href: MAIN_LINKS.caseStudies, icon: "Award" },
+      { label: "WhatsApp Business Calling API", href: "/whatsapp-business-calling-api", icon: "Phone" },
     ],
   },
 ];
@@ -75,21 +77,6 @@ export const industryMenu: {
   links: NavLink[];
   storySlug?: string;
 }[] = [
-  {
-    label: "B2B",
-    icon: "Building2",
-    links: [
-      { label: "Security and AV", href: "/industry/security-and-av" },
-      { label: "IT services", href: "/industry/it-services" },
-      { label: "Software and SaaS", href: "/industry/software-and-saas" },
-      { label: "Manufacturing and wholesale", href: "/industry/manufacturing-and-wholesale" },
-      { label: "Agencies and consulting", href: "/industry/agencies-and-consulting" },
-      { label: "Real estate", href: "/industry/real-estate" },
-      { label: "Events and webinars", href: "/industry/events-and-webinars" },
-      { label: "Finance and insurance", href: "/industry/finance-and-insurance" },
-    ],
-    storySlug: "deodap",
-  },
   {
     label: "Retail",
     icon: "Store",
@@ -111,6 +98,7 @@ export const industryMenu: {
       { label: "Afterschool Activities", href: "/industry/afterschool-activities" },
       { label: "Sport & Fitness", href: "/industry/sports-fitness" },
     ],
+    storySlug: "bluetea",
   },
   {
     label: "Healthcare",
@@ -141,6 +129,7 @@ export const industryMenu: {
       { label: "Auto Part Retailer", href: "/industry/auto-part-retailer" },
       { label: "Car Dealership", href: "/industry/car-dealership" },
     ],
+    storySlug: "deodap",
   },
   {
     label: "Travel",
@@ -149,64 +138,70 @@ export const industryMenu: {
       { label: "Overview", href: "/industry/travel" },
       { label: "Travel Agency & Tour Operator", href: "/industry/travel-agency-tour-operator" },
     ],
+    storySlug: "soulflower",
   },
 ];
 
 export const resourcesMenu: { title: string; links: NavLink[] }[] = [
   {
-    title: "Learn",
+    title: "Support",
     links: [
-      { label: "Contact Us", href: "/contact", description: "Talk to the YourLio team", icon: "LifeBuoy" },
-      { label: "Help Center", href: DOCS_URL, description: "Setup guides and how-tos", icon: "BookOpen" },
-      { label: "FAQs", href: "/faqs", description: "Answers for B2B teams", icon: "MessagesSquare" },
-      { label: "Blog", href: MAIN_LINKS.blog, description: "Guides from the YourLio team", icon: "Newspaper" },
-      { label: "Integrations", href: "/integrations", description: "Channels, CRM and the tools you use", icon: "Plug" },
+      { label: "Contact Us", href: "/contact", description: "We're here to help with human and AI support", icon: "LifeBuoy" },
+      { label: "Help Center", href: DOCS_URL, description: "Step-by-step guides to set up and use YourLio", icon: "BookOpen" },
+      { label: "Video Guides", href: YOUTUBE_URL, description: "Short walkthroughs from the YourLio team", icon: "Video" },
+      { label: "Blog", href: MAIN_LINKS.blog, description: "Practical guides to grow with conversations", icon: "Newspaper" },
+      { label: "Developer Hub", href: DOCS_URL, description: "Guides and documentation for developers", icon: "Code2" },
     ],
   },
   {
     title: "Free tools",
     links: [
-      { label: "Conversation Cost Calculator", href: "/whatsapp-pricing-calculator", description: "Estimate your YourLio plan", icon: "Calculator" },
-      { label: "WhatsApp Link Generator", href: "/whatsapp-link-generator", description: "Create a click to chat link", icon: "Link" },
-      { label: "WhatsApp QR Generator", href: "/whatsapp-qr-code-generator", description: "Create a scannable chat QR code", icon: "QrCode" },
+      { label: "WhatsApp Pricing Calculator", href: "/whatsapp-pricing-calculator", description: "Estimate your messaging costs", icon: "Calculator" },
+      { label: "WhatsApp Link Generator", href: "/whatsapp-link-generator", description: "Create a WhatsApp link instantly", icon: "Link" },
+      { label: "WhatsApp QR Generator", href: "/whatsapp-qr-code-generator", description: "Create a WhatsApp QR code", icon: "QrCode" },
     ],
   },
 ];
 
 export const topLinks: NavLink[] = [
   { label: "Pricing", href: "/pricing" },
-  { label: "Why YourLio", href: "/why-choose-us" },
+  { label: "Why Us", href: "/why-choose-us" },
+];
+
+export const languages = [
+  "English", "Spanish", "Arabic", "Chinese (Simplified)", "Chinese (Traditional)", "French",
+  "German", "Bahasa Indonesia", "Italian", "Portuguese", "Russian", "Thai", "Vietnamese",
 ];
 
 export const footerColumns: { title: string; links: NavLink[] }[] = [
   {
     title: "Company",
     links: [
-      { label: "About Us", href: "/about" },
-      { label: "Customer Stories", href: `${MAIN_SITE}/case-studies` },
       { label: "FAQs", href: "/faqs" },
+      { label: "About Us", href: "/about" },
       { label: "Partner Program", href: "/reseller" },
+      { label: "Partner Directory", href: "/reseller" },
       { label: "Refer & Earn", href: "/referral" },
       { label: "Careers", href: "/careers" },
       { label: "Press", href: "/press" },
       { label: "Contact Us", href: "/contact" },
-      { label: "YourLio for Shopify", href: MAIN_SITE },
     ],
   },
   {
     title: "Compare",
     links: [
-      { label: "YourLio vs Competitors", href: "/alternatives" },
-      { label: "YourLio vs Intercom", href: "/alternatives/intercom" },
-      { label: "YourLio vs Manychat", href: "/alternatives/manychat" },
-      { label: "YourLio vs Tidio", href: "/alternatives/tidio" },
+      { label: `${BRAND} vs Competitors`, href: "/alternatives" },
+      { label: `${BRAND} vs Intercom`, href: "/alternatives/intercom" },
+      { label: `${BRAND} vs Manychat`, href: "/alternatives/manychat" },
+      { label: `${BRAND} vs Tidio`, href: "/alternatives/tidio" },
     ],
   },
   {
     title: "WhatsApp",
     links: [
       { label: "WhatsApp Business API", href: "/whatsapp-business-api" },
-      { label: "WhatsApp and AI Calling", href: "/whatsapp-business-calling-api" },
+      { label: "WhatsApp Business Calling API", href: "/whatsapp-business-calling-api" },
+      { label: "WhatsApp API Calling Pricing", href: "/pricing" },
       { label: "WhatsApp Business Multiple Users", href: "/whatsapp-business-multiple-users" },
       { label: "WhatsApp Bulk Message", href: "/whatsapp-bulk-message" },
       { label: "WhatsApp CRM Integration", href: "/whatsapp-crm-integration" },
@@ -216,7 +211,11 @@ export const footerColumns: { title: string; links: NavLink[] }[] = [
     title: "Legal",
     links: [
       { label: "Privacy Policy", href: MAIN_LINKS.privacy },
+      { label: "Cookie Policy", href: MAIN_LINKS.privacy },
       { label: "Terms of Service", href: MAIN_LINKS.terms },
+      { label: "Legal Notice", href: MAIN_LINKS.terms },
+      { label: "Our Subprocessors", href: MAIN_LINKS.privacy },
+      { label: "Data Protection Addendum", href: MAIN_LINKS.privacy },
       { label: "Security", href: MAIN_LINKS.security },
     ],
   },

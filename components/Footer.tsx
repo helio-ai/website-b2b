@@ -40,7 +40,7 @@ export function Footer() {
             </a>
             <details className="group mt-6 w-fit">
               <summary className="flex cursor-pointer items-center gap-1 text-sm text-white/70 hover:text-white">
-                For AI assistants
+                LLM Resources
                 <ChevronDown className="h-4 w-4 transition-transform group-open:rotate-180" aria-hidden="true" />
               </summary>
               <div className="mt-2 space-y-1 rounded-lg bg-white/5 p-3 text-sm ring-1 ring-white/10">

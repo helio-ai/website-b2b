@@ -3,11 +3,11 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { ChevronDown, Menu, X, ArrowRight } from "lucide-react";
+import { ChevronDown, Globe, Menu, X, ArrowRight } from "lucide-react";
 import { Icon } from "./Icon";
 import { Logo } from "./Logo";
-import { APP_LOGIN_URL, industryMenu, productMenu, resourcesMenu, topLinks } from "@/lib/site";
-import { caseStudyUrl, getCaseStudy } from "@/lib/yourlio";
+import { APP_LOGIN_URL, APP_SIGNUP_URL, industryMenu, languages, productMenu, resourcesMenu, topLinks } from "@/lib/site";
+import { caseStudyUrl, getCaseStudy, integrations } from "@/lib/yourlio";
 
 type MenuKey = "product" | "industries" | "resources" | null;
 
@@ -16,6 +16,7 @@ export function Header() {
   const [open, setOpen] = useState<MenuKey>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [langOpen, setLangOpen] = useState(false);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const headerRef = useRef<HTMLElement>(null);
 
@@ -25,6 +26,7 @@ export function Header() {
     setLastPath(pathname);
     setOpen(null);
     setMobileOpen(false);
+    setLangOpen(false);
   }
 
   useEffect(() => {
@@ -39,11 +41,13 @@ export function Header() {
       if (e.key === "Escape") {
         setOpen(null);
         setMobileOpen(false);
+        setLangOpen(false);
       }
     };
     const onClick = (e: MouseEvent) => {
       if (headerRef.current && !headerRef.current.contains(e.target as Node)) {
         setOpen(null);
+        setLangOpen(false);
       }
     };
     document.addEventListener("keydown", onKey);
@@ -128,6 +132,33 @@ export function Header() {
           </nav>
 
           <div className="ms-auto flex items-center gap-1 sm:gap-2">
+            {/* Language selector */}
+            <div className="relative">
+              <button
+                type="button"
+                aria-label="Language"
+                aria-expanded={langOpen}
+                onClick={() => setLangOpen((v) => !v)}
+                className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-white hover:bg-white/10"
+              >
+                <Globe className="h-5 w-5" aria-hidden="true" />
+              </button>
+              {langOpen && (
+                <ul className="absolute right-0 mt-2 max-h-80 w-56 overflow-auto rounded-xl bg-ink-2 p-2 text-sm shadow-xl ring-1 ring-ink-line">
+                  {languages.map((l, i) => (
+                    <li key={l}>
+                      <button
+                        type="button"
+                        onClick={() => setLangOpen(false)}
+                        className={`block w-full rounded-md px-3 py-2 text-left text-white hover:bg-white/10 ${i === 0 ? "bg-white/10" : ""}`}
+                      >
+                        {l}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
             <Link
               href={APP_LOGIN_URL}
               className="hidden h-9 items-center whitespace-nowrap rounded-lg px-3 text-sm font-medium text-white hover:bg-white/10 xl:inline-flex"
@@ -135,16 +166,16 @@ export function Header() {
               Login
             </Link>
             <Link
-              href="/contact"
+              href="/demo"
               className="hidden h-9 items-center whitespace-nowrap rounded-lg bg-white/10 px-3.5 text-sm font-medium text-white ring-1 ring-white/20 hover:bg-white/20 md:inline-flex"
             >
-              Talk to us
+              Talk to Sales
             </Link>
             <Link
-              href="/demo"
+              href={APP_SIGNUP_URL}
               className="hidden h-9 items-center whitespace-nowrap rounded-lg bg-brand-500 px-3.5 text-sm font-medium text-white hover:bg-brand-600 sm:inline-flex"
             >
-              Book a demo
+              Start Free Trial
             </Link>
             <button
               type="button"
@@ -215,9 +246,15 @@ function ProductPanel() {
             Channels and Integrations <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </span>
           <span className="mt-3 grid grid-cols-7 gap-1.5" aria-hidden="true">
-            {Array.from({ length: 14 }, (_, i) => (
-              <span key={i} className="aspect-square rounded-md bg-white/10" />
-            ))}
+            {integrations
+              .filter((i) => i.logo)
+              .slice(0, 14)
+              .map((i) => (
+                <span key={i.slug} className="flex aspect-square items-center justify-center rounded-md bg-white p-1">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={i.logo as string} alt="" className="h-full w-full object-contain" loading="lazy" />
+                </span>
+              ))}
           </span>
         </Link>
       </div>
@@ -300,7 +337,7 @@ function ResourcesPanel() {
         <Icon name="Handshake" className="h-7 w-7" />
         <span className="mt-auto pt-10 text-xs text-white/70">Partners</span>
         <span className="mt-1 flex items-center gap-1 text-base font-semibold">
-          Join the YourLio partner program <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+          Explore Our Partner Program <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
         </span>
       </Link>
     </div>
@@ -357,7 +394,7 @@ function MobileMenu() {
               ))}
             </div>
           ))}
-          <PanelLink href="/reseller" label="Join the YourLio partner program" icon="Handshake" />
+          <PanelLink href="/reseller" label="Explore Our Partner Program" icon="Handshake" />
         </MobileSection>
         {topLinks.map((l) => (
           <Link key={l.href} href={l.href} className="block border-b border-ink-line py-4 text-base font-medium text-white">
@@ -369,11 +406,11 @@ function MobileMenu() {
         </Link>
       </nav>
       <div className="grid grid-cols-2 gap-2 border-t border-ink-line p-4">
-        <Link href="/contact" className="inline-flex h-11 items-center justify-center rounded-lg bg-white/10 text-sm font-medium text-white ring-1 ring-white/20">
-          Talk to us
+        <Link href="/demo" className="inline-flex h-11 items-center justify-center rounded-lg bg-white/10 text-sm font-medium text-white ring-1 ring-white/20">
+          Talk to Sales
         </Link>
-        <Link href="/demo" className="inline-flex h-11 items-center justify-center rounded-lg bg-brand-500 text-sm font-medium text-white">
-          Book a demo
+        <Link href={APP_SIGNUP_URL} className="inline-flex h-11 items-center justify-center rounded-lg bg-brand-500 text-sm font-medium text-white">
+          Start Free Trial
         </Link>
       </div>
     </div>

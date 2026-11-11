@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { ArrowRight, Plus, Star } from "lucide-react";
 import { Icon } from "./Icon";
-import { BRAND, SHOPIFY_REVIEWS_URL } from "@/lib/site";
+import { APP_SIGNUP_URL, BRAND, SHOPIFY_REVIEWS_URL } from "@/lib/site";
 import { CASE_STUDIES_URL, caseStudyUrl, customerLogos, pillars, reviewUrl, reviews, type CaseStudy } from "@/lib/yourlio";
 import { JsonLd, faqSchema } from "@/lib/seo";
 
@@ -98,11 +98,11 @@ export function Button({
 export function CtaPair({ dark = true, center = false }: { dark?: boolean; center?: boolean }) {
   return (
     <div className={`flex flex-col gap-3 sm:flex-row ${center ? "sm:justify-center" : ""}`}>
-      <Button href="/demo" variant="primary" size="lg">
-        Book a demo
+      <Button href="/demo" variant={dark ? "secondary" : "outline"} size="lg">
+        Talk to Sales
       </Button>
-      <Button href="/pricing" variant={dark ? "secondary" : "outline"} size="lg">
-        See pricing
+      <Button href={APP_SIGNUP_URL} variant="primary" size="lg">
+        Start Free Trial
       </Button>
     </div>
   );
