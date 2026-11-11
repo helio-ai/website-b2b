@@ -1,0 +1,71 @@
+/* Navigation, footer, FAQ and the 404 page. */
+
+.nav { position: sticky; top: 0; z-index: 50; border-bottom: 1px solid var(--b-line); background: #070d24e6; -webkit-backdrop-filter: blur(16px) saturate(160%); backdrop-filter: blur(16px) saturate(160%); }
+.nav-inner { display: flex; align-items: center; gap: 24px; width: min(1240px,calc(100% - 64px)); height: 64px; margin-inline: auto; }
+.nav-brand { display: inline-flex; flex-shrink: 0; align-items: center; gap: 10px; color: #fff; font-size: 16px; font-weight: 600; letter-spacing: -.02em; }
+.nav-brand img { border-radius: 8px; }
+.nav-brand em { color: var(--b-text2); font-style: normal; font-weight: 500; }
+.nav-links { display: flex; align-items: center; gap: 26px; margin-left: auto; }
+.nav-links > a,.nav-menu > button { display: inline-flex; align-items: center; gap: 5px; min-height: 44px; color: #c9d0ea; font-size: 14px; font-weight: 500; transition: color .2s; }
+.nav-menu > button svg { transition: transform .2s; }
+.nav-menu > button[aria-expanded="true"] { color: #fff; }
+.nav-menu > button[aria-expanded="true"] svg { transform: rotate(180deg); }
+@media(hover:hover) { .nav-links > a:hover,.nav-menu > button:hover { color: #fff; } }
+.nav-menu { position: relative; }
+.nav-panel { position: absolute; top: calc(100% + 8px); left: 50%; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; width: 660px; max-width: calc(100vw - 40px); padding: 14px; border: 1px solid var(--b-line2); border-radius: 18px; background: #0b1336; box-shadow: 0 30px 70px -30px #000; transform: translateX(-50%); }
+.nav-group > p { margin: 4px 10px 8px; color: var(--b-text3); font-size: 12px; font-weight: 600; }
+.nav-group a { display: block; padding: 9px 10px; border-radius: 10px; transition: background .2s; }
+.nav-group a strong { display: block; color: #fff; font-size: 13.5px; font-weight: 600; }
+.nav-group a small { display: block; margin-top: 2px; color: var(--b-text3); font-size: 12px; line-height: 1.4; }
+.nav-group a[aria-current] { background: #4f7cff1f; }
+@media(hover:hover) { .nav-group a:hover { background: #ffffff0d; } }
+.nav-inner .nav-cta { min-height: 40px; padding: 0 18px; font-size: 14px; }
+.nav-toggle { display: none; place-items: center; width: 44px; height: 44px; margin-left: auto; border: 1px solid var(--b-line2); border-radius: 12px; color: #fff; }
+.nav-mobile { display: none; }
+
+@media(max-width:900px) {
+  .nav-inner { width: calc(100% - 40px); height: 60px; }
+  .nav-links,.nav-inner .nav-cta { display: none; }
+  .nav-toggle { display: grid; }
+  .nav-mobile { display: grid; gap: 18px; max-height: calc(100dvh - 60px); overflow-y: auto; padding: 16px 20px 24px; border-top: 1px solid var(--b-line); background: var(--b-ink0); }
+  .nav-mobile .nav-group ul { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
+  .nav-mobile .nav-group > p { margin-inline: 0; }
+  .nav-mobile .nav-group a { padding: 8px 0; }
+  .nav-mobile .nav-group a small { display: none; }
+  .nav-mobile-links { display: grid; padding-top: 10px; border-top: 1px solid var(--b-line); }
+  .nav-mobile-links a { display: flex; align-items: center; gap: 6px; min-height: 44px; color: #fff; font-size: 15px; }
+  .nav-mobile > .b2b-btn { width: 100%; }
+}
+
+.foot { padding: 56px 0 32px; border-top: 1px solid var(--b-line); background: #050a1c; color: var(--b-text3); }
+.foot-inner { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr .7fr; gap: 32px; width: min(1200px,calc(100% - 64px)); margin-inline: auto; }
+.foot-brand > a:first-child { display: inline-flex; align-items: center; gap: 10px; color: #fff; font-weight: 600; }
+.foot-brand img { border-radius: 8px; }
+.foot-brand p { max-width: 30ch; margin: 14px 0; font-size: 14px; line-height: 1.6; }
+.foot-brand > a:last-child { color: var(--b-accent2); font-size: 14px; }
+.foot h2 { margin-bottom: 14px; color: #fff; font-size: 13px; font-weight: 600; }
+.foot ul { display: grid; gap: 10px; }
+.foot ul a { color: var(--b-text2); font-size: 14px; transition: color .2s; }
+@media(hover:hover) { .foot ul a:hover,.foot-brand > a:last-child:hover { color: #fff; } }
+.foot-legal { width: min(1200px,calc(100% - 64px)); margin: 40px auto 0; padding-top: 20px; border-top: 1px solid var(--b-line); font-size: 12px; }
+@media(max-width:960px) { .foot-inner { grid-template-columns: 1fr 1fr; } .foot-brand { grid-column: 1 / -1; } }
+@media(max-width:560px) { .foot-inner,.foot-legal { width: calc(100% - 40px); } .foot-inner { grid-template-columns: 1fr 1fr; gap: 28px 20px; } }
+
+.b2b-faq-list { max-width: 860px; padding: 0 24px; border: 1px solid var(--b-line); border-radius: 24px; background: #ffffff08; }
+.b2b-faq-list details + details { border-top: 1px solid var(--b-line); }
+.b2b-faq-list summary { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 44px; padding: 22px 0; color: #fff; font-size: 17px; font-weight: 500; line-height: 1.4; list-style: none; cursor: pointer; }
+.b2b-faq-list summary::-webkit-details-marker { display: none; }
+.b2b-faq-list summary svg { flex-shrink: 0; box-sizing: content-box; padding: 6px; border-radius: 50%; background: #ffffff0f; color: var(--b-accent2); transition: transform .2s,background .2s,color .2s; }
+.b2b-faq-list details[open] summary svg { background: var(--b-accent); color: #fff; transform: rotate(45deg); }
+.b2b-faq-list details p { max-width: 70ch; padding: 0 44px 22px 0; font-size: 15px; line-height: 1.65; }
+@media(max-width:720px) { .b2b-faq-list { padding: 0 18px; border-radius: 18px; } .b2b-faq-list summary { padding: 18px 0; font-size: 16px; } .b2b-faq-list details p { padding-right: 0; } }
+
+.notfound h1 { color: #fff; font-family: var(--b-display); font-size: clamp(36px,5vw,56px); font-weight: 600; line-height: 1.05; letter-spacing: -.04em; }
+.notfound > p { max-width: 52ch; margin: 16px 0 28px; font-size: 17px; line-height: 1.6; }
+.notfound-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 40px; }
+.notfound-links a { display: inline-flex; align-items: center; min-height: 40px; padding: 0 14px; border: 1px solid var(--b-line2); border-radius: 999px; color: #c9d0ea; font-size: 14px; }
+@media(hover:hover) { .notfound-links a:hover { border-color: #ffffff59; color: #fff; } }
+
+@media(prefers-reduced-motion:reduce) {
+  .nav-links > a,.nav-menu > button,.nav-menu > button svg,.nav-group a,.foot ul a,.b2b-faq-list summary svg { transition: none; }
+}
