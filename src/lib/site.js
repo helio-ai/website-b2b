@@ -1,6 +1,6 @@
 /* Where this site and its parent live. The B2B site is its own origin; the
    company, legal and ecommerce pages stay on the main YourLio site. */
-export const SITE_URL = 'https://b2b.yourlio.com';
+export const SITE_URL = 'https://business.yourlio.com';
 export const MAIN_SITE_URL = 'https://yourlio.com';
 
 export const LOGO_SRC = '/favicon.png';

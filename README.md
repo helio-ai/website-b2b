@@ -1,7 +1,7 @@
 # YourLio for business
 
 The marketing site for businesses that sell through a conversation, for
-`b2b.yourlio.com`: a home page and one page per industry, each with a live
+`business.yourlio.com`: a home page and one page per industry, each with a live
 replica of the YourLio chat widget qualifying a lead and booking the call.
 
 ```bash

@@ -41,4 +41,4 @@ Allow: /
 User-agent: Meta-ExternalAgent
 Allow: /
 
-Sitemap: https://b2b.yourlio.com/sitemap.xml
+Sitemap: https://business.yourlio.com/sitemap.xml

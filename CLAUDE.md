@@ -6,7 +6,7 @@ Guidance for Claude Code when working in this repository.
 
 `website-b2b` is **YourLio for business**, the marketing site for businesses
 that sell through a conversation (a call, a quote or a site visit), meant for
-`https://b2b.yourlio.com`. It is a sibling of `website-v2`, the main
+`https://business.yourlio.com`. It is a sibling of `website-v2`, the main
 `yourlio.com` site for Shopify brands, and shares no code with it at runtime.
 Company, contact, legal and integrations pages stay on yourlio.com and are
 linked from here (`MAIN_LINKS` in `src/lib/site.js`).
@@ -63,5 +63,5 @@ npm run images    # rebuild public/images/ (WebP pictures and share cards) from 
 ## Not set up yet
 
 - Analytics. The main site's GA4 and PostHog setup is not copied here.
-- Hosting. Deploy as its own Vercel project and point `b2b.yourlio.com` at it
+- Hosting. Deploy as its own Vercel project and point `business.yourlio.com` at it
   with a CNAME at Hostinger, where yourlio.com's DNS is managed.

@@ -1,4 +1,4 @@
-/* Content for the YourLio for business site (b2b.yourlio.com): the home page
+/* Content for the YourLio for business site (business.yourlio.com): the home page
    and one page per industry, for businesses that sell through a conversation:
    a call, a quote or a site visit.
 
