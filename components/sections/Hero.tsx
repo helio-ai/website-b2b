@@ -4,11 +4,11 @@ import { SHOPIFY_REVIEWS_URL } from "@/lib/site";
 
 export function Hero() {
   return (
-    <section className="bg-grid-dark relative overflow-hidden bg-ink pt-28 pb-16 text-white sm:pt-36 sm:pb-24">
+    <section className="bg-grid-dark relative overflow-hidden bg-ink pt-28 pb-14 text-white sm:pt-32 sm:pb-20">
       <div className="pointer-events-none absolute -top-40 left-1/2 h-[30rem] w-[64rem] -translate-x-1/2 rounded-full bg-brand-400/40 blur-3xl" aria-hidden="true" />
       <Container className="relative text-center">
         <a
-          href="#whatsapp"
+          href="#product"
           className="inline-flex items-center gap-2 rounded-full bg-white/10 py-1 ps-1 pe-3 text-xs font-medium text-white/80 ring-1 ring-white/15 hover:bg-white/15"
         >
           <span className="rounded-full bg-brand-500 px-2 py-0.5 text-white">New</span>
@@ -33,7 +33,7 @@ export function Hero() {
           </span>
           Rated 5.0 on the Shopify App Store, used by 100+ brands
         </a>
-        <div className="mx-auto mt-14 max-w-5xl">
+        <div className="mx-auto mt-12 max-w-5xl">
           <ProductShot shot="inbox-dark" priority sizes="(min-width: 1100px) 1024px, 100vw" />
         </div>
       </Container>

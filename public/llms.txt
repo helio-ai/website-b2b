@@ -13,19 +13,14 @@ YourLio AI was previously called Helio AI and is developed by HELIOAI AGENTIC SY
 
 ## On the landing page
 - [How it works](https://business.yourlio.com/#how-it-works): answer every enquiry, ask your questions, collect contact details, book the call.
-- [Capture](https://business.yourlio.com/#capture): leads from Meta ads, Instagram and Facebook, website chat and popups, QR codes and links.
-- [Convert](https://business.yourlio.com/#convert): AI agents, lead qualification, routing and booking appointments.
-- [Inbox and CRM](https://business.yourlio.com/#inbox): shared team inbox, CRM stages from new to booked, support for existing clients.
-- [Retain](https://business.yourlio.com/#retain): campaigns, follow ups, reminders and feedback requests.
-- [WhatsApp and calling](https://business.yourlio.com/#whatsapp): WhatsApp Business API, AI calls and WhatsApp calling, one number for the whole team, bulk messages.
+- [Product](https://business.yourlio.com/#product): capture leads from Meta ads, Instagram, Facebook, your website and QR codes; AI agents that qualify, route and book; a shared inbox and CRM; campaigns and follow ups; WhatsApp, AI calls and WhatsApp calling.
 - [Industries](https://business.yourlio.com/#industries): sample conversations for 29 industries, from IT services and real estate to clinics and travel.
-- [Integrations](https://business.yourlio.com/#integrations)
-- [Customers](https://business.yourlio.com/#customers)
-- [Pricing](https://business.yourlio.com/#pricing)
+- [Customers](https://business.yourlio.com/#customers): results from published case studies, and integrations.
 - [FAQ](https://business.yourlio.com/#faq)
 - [Book a demo](https://business.yourlio.com/#demo)
 
 ## On yourlio.com
+- [Pricing](https://yourlio.com/pricing)
 - [Case studies](https://yourlio.com/case-studies)
 - [Comparisons](https://yourlio.com/compare)
 - [Integrations](https://yourlio.com/integrations)

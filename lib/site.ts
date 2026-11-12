@@ -25,46 +25,36 @@ export const MAIN_LINKS = {
   caseStudies: `${MAIN_SITE}/case-studies`,
   contact: `${MAIN_SITE}/contact`,
   integrations: `${MAIN_SITE}/integrations`,
+  pricing: `${MAIN_SITE}/pricing`,
 };
 
 export type NavLink = { label: string; href: string; description?: string; icon?: string };
 
 // The site is one landing page: navigation jumps to its sections.
 export const navLinks: NavLink[] = [
-  { label: "Product", href: "/#capture" },
+  { label: "Product", href: "/#product" },
   { label: "Industries", href: "/#industries" },
-  { label: "Integrations", href: "/#integrations" },
   { label: "Customers", href: "/#customers" },
-  { label: "Pricing", href: "/#pricing" },
   { label: "FAQ", href: "/#faq" },
+  { label: "Pricing", href: MAIN_LINKS.pricing },
 ];
 
 export const footerColumns: { title: string; links: NavLink[] }[] = [
   {
-    title: "Product",
+    title: "On this page",
     links: [
       { label: "How it works", href: "/#how-it-works" },
-      { label: "Capture leads", href: "/#capture" },
-      { label: "Qualify and book", href: "/#convert" },
-      { label: "Inbox and CRM", href: "/#inbox" },
-      { label: "Campaigns and follow ups", href: "/#retain" },
-      { label: "WhatsApp and calling", href: "/#whatsapp" },
-    ],
-  },
-  {
-    title: "Explore",
-    links: [
+      { label: "Product", href: "/#product" },
       { label: "Industries", href: "/#industries" },
-      { label: "Integrations", href: "/#integrations" },
       { label: "Customers", href: "/#customers" },
-      { label: "Book a demo", href: "/#demo" },
-      { label: "Pricing", href: "/#pricing" },
       { label: "FAQ", href: "/#faq" },
+      { label: "Book a demo", href: "/#demo" },
     ],
   },
   {
     title: "Company",
     links: [
+      { label: "Pricing", href: MAIN_LINKS.pricing },
       { label: "Contact Us", href: MAIN_LINKS.contact },
       { label: "About YourLio", href: MAIN_LINKS.about },
       { label: "Customer stories", href: MAIN_LINKS.caseStudies },

@@ -31,6 +31,10 @@
   --color-text-2: #5c5c63;
   --color-text-3: #8e8e93;
 
+  @keyframes story-progress {
+    from { transform: scaleX(0); }
+    to { transform: scaleX(1); }
+  }
   --animate-marquee: marquee 70s linear infinite;
   @keyframes marquee {
     from { transform: translateX(0); }

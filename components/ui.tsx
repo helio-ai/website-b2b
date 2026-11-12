@@ -22,7 +22,7 @@ export function Section({
 }) {
   const tones = { light: "bg-surface text-text", muted: "bg-muted text-text", dark: "bg-ink text-white" };
   return (
-    <section id={id} className={`scroll-mt-28 py-16 sm:py-20 lg:py-24 ${tones[tone]} ${className}`}>
+    <section id={id} className={`scroll-mt-28 py-14 sm:py-16 lg:py-20 ${tones[tone]} ${className}`}>
       <Container>{children}</Container>
     </section>
   );
@@ -42,7 +42,7 @@ export function SectionHeading({
   dark?: boolean;
 }) {
   return (
-    <div className={`mb-10 sm:mb-14 ${align === "center" ? "mx-auto max-w-3xl text-center" : "max-w-2xl"}`}>
+    <div className={`mb-8 sm:mb-10 ${align === "center" ? "mx-auto max-w-3xl text-center" : "max-w-2xl"}`}>
       {eyebrow && <p className={`mb-3 text-sm font-semibold uppercase tracking-wider ${dark ? "text-brand-300" : "text-brand-600"}`}>{eyebrow}</p>}
       <h2 className="text-3xl font-semibold tracking-tight text-balance sm:text-4xl">{title}</h2>
       {sub && <p className={`mt-4 text-base sm:text-lg ${dark ? "text-white/70" : "text-text-2"}`}>{sub}</p>}

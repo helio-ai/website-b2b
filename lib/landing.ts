@@ -79,10 +79,8 @@ export const featureGroups: FeatureGroup[] = [
 /** The "on this page" bar under the hero. */
 export const sections = [
   { id: "how-it-works", label: "How it works" },
-  ...featureGroups.map((g) => ({ id: g.id, label: g.eyebrow })),
+  { id: "product", label: "Product" },
   { id: "industries", label: "Industries" },
-  { id: "integrations", label: "Integrations" },
   { id: "customers", label: "Customers" },
-  { id: "pricing", label: "Pricing" },
   { id: "faq", label: "FAQ" },
 ];

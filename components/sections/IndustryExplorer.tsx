@@ -1,51 +1,59 @@
 "use client";
 
 import { useState } from "react";
-import { Icon } from "@/components/Icon";
 import { ChatDemo } from "./ChatDemo";
 import type { IndustryCopy } from "@/lib/copy/industries";
 
-/** Pick an industry to see the sample conversation the agent runs for it. */
+/** Pick a group, then an industry, to see the sample conversation the agent runs for it. */
 export function IndustryExplorer({ industries }: { industries: IndustryCopy[] }) {
   const groups = [...new Set(industries.map((i) => i.group))];
-  const [slug, setSlug] = useState(industries[0].slug);
-  const ind = industries.find((i) => i.slug === slug) ?? industries[0];
+  const [group, setGroup] = useState(groups[0]);
+  const inGroup = industries.filter((i) => i.group === group);
+  const [slug, setSlug] = useState(inGroup[0].slug);
+  const ind = inGroup.find((i) => i.slug === slug) ?? inGroup[0];
+
+  const pickGroup = (g: string) => {
+    setGroup(g);
+    setSlug(industries.find((i) => i.group === g)!.slug);
+  };
 
   return (
     <div>
-      <div className="space-y-4">
+      <div role="tablist" aria-label="Industry groups" className="no-scrollbar -mx-4 flex gap-1 overflow-x-auto px-4 sm:mx-0 sm:w-fit sm:rounded-xl sm:bg-muted sm:p-1">
         {groups.map((g) => (
-          <div key={g} className="flex flex-col gap-2 sm:flex-row sm:items-start">
-            <p className="w-48 shrink-0 pt-1.5 text-xs font-semibold uppercase tracking-wider text-text-3">{g}</p>
-            <div role="tablist" aria-label={`${g} industries`} className="flex flex-wrap gap-2">
-              {industries
-                .filter((i) => i.group === g)
-                .map((i) => (
-                  <button
-                    key={i.slug}
-                    type="button"
-                    role="tab"
-                    aria-selected={i.slug === slug}
-                    onClick={() => setSlug(i.slug)}
-                    className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-sm transition-colors ${
-                      i.slug === slug ? "bg-brand-500 text-white" : "bg-white text-text-2 ring-1 ring-line hover:text-text hover:ring-brand-200"
-                    }`}
-                  >
-                    {i.slug === slug && <Icon name={i.icon} className="h-3.5 w-3.5" />}
-                    {i.name}
-                  </button>
-                ))}
-            </div>
-          </div>
+          <button
+            key={g}
+            type="button"
+            role="tab"
+            aria-selected={g === group}
+            onClick={() => pickGroup(g)}
+            className={`shrink-0 rounded-lg px-4 py-2 text-sm font-medium transition-colors ${g === group ? "bg-ink text-white" : "text-text-2 hover:text-text"}`}
+          >
+            {g}
+          </button>
         ))}
       </div>
 
-      <div role="tabpanel" className="mt-10">
-        <h3 className="text-2xl font-semibold tracking-tight sm:text-3xl">{ind.h1}</h3>
-        <p className="mt-2 max-w-3xl text-text-2">{ind.lead}</p>
-        <div className="mt-8">
-          <ChatDemo ind={ind} />
-        </div>
+      <div role="tablist" aria-label={`${group} industries`} className="mt-4 flex flex-wrap gap-2">
+        {inGroup.map((i) => (
+          <button
+            key={i.slug}
+            type="button"
+            role="tab"
+            aria-selected={i.slug === ind.slug}
+            onClick={() => setSlug(i.slug)}
+            className={`rounded-full px-3.5 py-1.5 text-sm transition-colors ${
+              i.slug === ind.slug ? "bg-brand-500 text-white" : "bg-white text-text-2 ring-1 ring-line hover:text-text hover:ring-brand-200"
+            }`}
+          >
+            {i.name}
+          </button>
+        ))}
+      </div>
+
+      <div role="tabpanel" className="mt-8">
+        <h3 className="mb-6 text-xl font-semibold tracking-tight sm:text-2xl">{ind.h1}</h3>
+        <ChatDemo ind={ind} />
       </div>
     </div>
   );

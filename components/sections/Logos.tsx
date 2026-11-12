@@ -5,9 +5,9 @@ import { customerLogos } from "@/lib/yourlio";
 /** Scrolling row of customer logos, muted until hovered. */
 export function Logos() {
   return (
-    <section className="bg-surface py-14">
+    <section className="bg-surface py-10">
       <Container>
-        <p className="mb-8 text-center text-sm font-medium text-text-2">Brands that run their customer conversations on YourLio</p>
+        <p className="mb-6 text-center text-sm font-medium text-text-2">Brands that run their customer conversations on YourLio</p>
         <div className="relative overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_12%,black_88%,transparent)]">
           <ul className="animate-marquee flex w-max items-center gap-14 py-2 hover:[animation-play-state:paused] sm:gap-20" aria-label="YourLio customers">
             {[...customerLogos, ...customerLogos].map((l, i) => (
